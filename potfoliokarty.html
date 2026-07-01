@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth bg-[#030712]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mikołaj Sitek - Creative Frontend Engineer. Premium portfolio.">
+    <title>Mikołaj Sitek - MSX Cinematic Core</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        terminal: {
+                            bg: '#030712',
+                            panel: 'rgba(15, 23, 42, 0.4)',
+                            border: 'rgba(30, 41, 59, 0.6)',
+                            text: '#94a3b8',
+                            highlight: '#f8fafc',
+                        },
+                        bull: '#10b981',
+                        bear: '#ef4444',
+                    },
+                    boxShadow: {
+                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.2)',
+                        'neon-green-intense': '0 0 40px rgba(16, 185, 129, 0.5)',
+                        'panel': 'inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.8)',
+                    },
+                    animation: {
+                        'marquee': 'marquee 40s linear infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* =========================================
+           GLOBAL & CORE
+           ========================================= */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+        body {
+            overflow-x: clip; 
+            background-color: #030712;
+            color: #94a3b8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root { --top-ui-height: 88px; }
+
+        section[id], main { position: relative; z-index: 10; scroll-margin-top: var(--top-ui-height); }
+        nav, footer { position: relative; z-index: 20; }
+        *:focus-visible { outline: 2px dashed #10b981 !important; outline-offset: 4px !important; }
+
+        body:not(.js-enabled) .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+
+        /* 3D MODEL SLOTS */
+        .model-slot { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        .model-slot.has-model > .fallback-visual { opacity: 0; pointer-events: none; }
+        .fallback-visual { transition: opacity 0.5s ease; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;}
+
+        /* BACKGROUNDS */
+        .noise-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+        }
+        #webgl-experience { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+        .webgl-text-mask {
+            position: absolute; inset: -20%;
+            background: radial-gradient(circle at center, rgba(3,7,18,0.95) 0%, rgba(3,7,18,0.75) 50%, transparent 80%);
+            pointer-events: none; z-index: -1;
+        }
+
+        /* TYPOGRAFIA */
+        .text-outline { color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05); }
+        .text-outline-bull { color: transparent; -webkit-text-stroke: 1px rgba(16, 185, 129, 0.2); transition: color 0.5s ease, -webkit-text-stroke 0.5s ease; }
+        .huge-title { font-size: clamp(4rem, 15vw, 15rem); line-height: 0.8; letter-spacing: -0.05em; }
+        .editorial-heading { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 0.95; letter-spacing: -0.04em; }
+
+        /* ANIMATIONS */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(30, 41, 59, 0.6);
+        }
+        @keyframes terminal-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .animate-terminal-blink { animation: terminal-blink 1s step-end infinite; }
+
+        /* BUTTONS & NAV */
+        .action-btn { 
+            position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer;
+        }
+        .action-btn:active { transform: scale(0.97) !important; }
+        .action-btn.solid::after, .action-btn.ghost::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            transform: skewX(-25deg); transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;
+        }
+        .action-btn.solid::after { background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent); }
+        .action-btn.ghost::after { background: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.15), transparent); }
+        .action-btn:hover::after, .action-btn:focus-visible::after { left: 200%; }
+
+        .nav-link { position: relative; color: #94a3b8; transition: color 0.3s ease; white-space: nowrap; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0%; height: 2px; background-color: #10b981; transition: width 0.3s ease; }
+        .nav-link:hover, .nav-link.is-active { color: #10b981; }
+        .nav-link:hover::after, .nav-link.is-active::after { width: 100%; }
+
+        /* =========================================
+           NEW: IDENTITY DECK (HAND OF CARDS)
+           ========================================= */
+        .identity-deck-container {
+            perspective: 2000px;
+        }
+        .identity-card {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 280px;
+            aspect-ratio: 2/3;
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.4), rgba(3, 7, 18, 0.9));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(16, 185, 129, 0.05);
+            transform-origin: center center;
+            will-change: transform;
+            pointer-events: auto;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        @media (max-width: 768px) {
+            .identity-card { width: 220px; }
+        }
+        
+        /* Obsługa obrazków i ich zepsutego stanu */
+        .identity-card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+            opacity: 0.9;
+            transition: opacity 0.4s ease;
+            position: relative;
+            z-index: 10;
+        }
+        .identity-card:hover {
+            border-color: #10b981;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 40px rgba(16, 185, 129, 0.3);
+            z-index: 100 !important;
+        }
+        .identity-card:hover img {
+            opacity: 1;
+        }
+
+        /* Card Labels */
+        .card-label {
+            position: absolute;
+            opacity: var(--label-opacity, 0);
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(3, 7, 18, 0.8);
+            padding: 6px 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .identity-card[data-index="0"] .card-label { bottom: -50px; left: 50%; transform: translateX(-50%); }
+        .identity-card[data-index="1"] .card-label { top: -20px; left: -140px; }
+        .identity-card[data-index="2"] .card-label { top: -20px; right: -140px; flex-direction: row-reverse; }
+        .identity-card[data-index="3"] .card-label { bottom: 20px; left: -140px; }
+        .identity-card[data-index="4"] .card-label { bottom: 20px; right: -140px; flex-direction: row-reverse; }
+
+        @media (max-width: 1024px) {
+            .card-label { display: none; }
+        }
+
+        /* =========================================
+           INTERFACE DECONSTRUCTED (SCROLL EXPLOSION)
+           ========================================= */
+        .deconstructed-container { perspective: 2000px; transform-style: preserve-3d; }
+        .exploded-stack {
+            position: relative;
+            width: 320px;
+            aspect-ratio: 16/10;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(-40deg);
+        }
+        @media (min-width: 768px) { .exploded-stack { width: 400px; } }
+        .layer-z-wrapper { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+        .exploded-layer {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px; backdrop-filter: blur(8px); transform-style: preserve-3d;
+            transition: opacity 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease; cursor: crosshair;
+        }
+        .exploded-stack:hover .layer-z-wrapper:not(:hover) .exploded-layer { opacity: 0.15; filter: blur(2px); border-color: rgba(30, 41, 59, 0.5); }
+        .layer-z-wrapper:hover .exploded-layer { background: rgba(15, 23, 42, 0.8); border-color: #10b981; box-shadow: 0 0 40px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.1); transform: scale(1.02); }
+        
+        .layer-label { position: absolute; top: 50%; transform: translateY(-50%) rotateZ(40deg) rotateX(-60deg); width: max-content; pointer-events: none; opacity: var(--label-opacity, 0); transition: opacity 0.3s ease; }
+        .label-left { right: 110%; text-align: right; }
+        .label-right { left: 110%; text-align: left; }
+        .label-line-left, .label-line-right { content: ''; position: absolute; top: 50%; width: 60px; height: 1px; background: rgba(16, 185, 129, 0.5); transform-origin: center; }
+        .label-line-left { right: -70px; }
+        .label-line-right { left: -70px; }
+        .layer-z-wrapper:hover .label-line-left, .layer-z-wrapper:hover .label-line-right { background: #10b981; box-shadow: 0 0 10px #10b981; }
+
+        .vis-problem { background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px); }
+        .vis-structure { border-style: dashed; }
+        .vis-interface .interface-box { border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; background: rgba(16,185,129,0.05); }
+        .vis-logic .logic-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; }
+        .vis-motion { overflow: hidden; }
+        .vis-motion .motion-sweep { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent); animation: sweep 3s infinite linear; }
+        .vis-polish { box-shadow: inset 0 0 30px rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.6); }
+
+        @keyframes sweep { 0% { transform: translateX(-100%) skewX(-15deg); } 100% { transform: translateX(200%) skewX(-15deg); } }
+
+        /* =========================================
+           INTERACTION LAB (EXPERIMENTS)
+           ========================================= */
+        .magnetic-wrap { display: inline-block; padding: 20px; margin: -20px; }
+        .magnetic-btn { transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; }
+        .feedback-btn { transition: all 0.3s ease; }
+        .feedback-btn.state-hover { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); transform: translateY(-2px); }
+        .feedback-btn.state-active { transform: scale(0.95); background: rgba(16, 185, 129, 0.2); }
+        .feedback-btn.state-success { background: #10b981; color: #030712; border-color: #10b981; }
+
+        /* =========================================
+           OPEN SIGNAL (CONTACT RINGS)
+           ========================================= */
+        .signal-orbit { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; }
+        .orbit-1 { width: 300px; height: 300px; border: 1px solid rgba(16, 185, 129, 0.1); border-left-color: #10b981; animation: spin 20s linear infinite; }
+        .orbit-2 { width: 450px; height: 450px; border: 1px dashed rgba(30, 41, 59, 0.6); border-right-color: rgba(16, 185, 129, 0.3); animation: spin 30s linear infinite reverse; }
+        .orbit-3 { width: 600px; height: 600px; border: 1px solid rgba(16, 185, 129, 0.05); border-top-color: rgba(16, 185, 129, 0.2); animation: spin 40s linear infinite; }
+
+        /* =========================================
+           PROTECTED: 3D HERO CARD
+           ========================================= */
+        .card-3d-wrapper { perspective: 1500px; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; position: relative; z-index: 30; }
+        .collectible-card-3d { position: relative; width: 100%; max-width: 400px; aspect-ratio: 3/4; transform-style: preserve-3d; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(16, 185, 129, 0.15); }
+        .card-inner-3d { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); transform-style: preserve-3d; overflow: hidden; display: flex; flex-direction: column; }
+        .card-content-3d { position: relative; z-index: 20; height: 100%; display: flex; flex-direction: column; transform: translateZ(30px); padding: 1.5rem; }
+    </style>
+</head>
+
+<body class="relative text-terminal-text">
+
+    <!-- Global Noise -->
+    <div class="noise-bg"></div>
+    <canvas id="webgl-experience" aria-hidden="true"></canvas>
+
+    <!-- Ticker Bar -->
+    <div class="fixed top-0 left-0 w-full bg-terminal-bg/90 backdrop-blur-md border-b border-terminal-border z-50 h-10 flex items-center overflow-hidden font-mono text-sm shadow-md" role="marquee">
+        <div class="flex whitespace-nowrap animate-marquee w-[200%]">
+            <div class="flex items-center gap-8 px-4 min-w-full">
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> DESIGN_SYSTEMS +12.4%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> MICRO_INTERACTIONS +8.1%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> SPATIAL_UI +15.7%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> THREEJS +24.5%</span>
+                <span class="text-terminal-text font-bold text-bull px-2 py-0.5 bg-bull/10 border border-bull/30 rounded"><span class="mr-1">●</span> $OPEN_TO_WORK ACTIVE</span>
+            </div>
+            <div class="flex items-center gap-8 px-4 min-w-full" aria-hidden="true">
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> DESIGN_SYSTEMS +12.4%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> MICRO_INTERACTIONS +8.1%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> SPATIAL_UI +15.7%</span>
+                <span class="text-terminal-text"><span class="text-bull mr-1">▲</span> THREEJS +24.5%</span>
+                <span class="text-terminal-text font-bold text-bull px-2 py-0.5 bg-bull/10 border border-bull/30 rounded"><span class="mr-1">●</span> $OPEN_TO_WORK ACTIVE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Nav -->
+    <nav aria-label="Główna nawigacja" class="fixed top-10 w-full z-40 px-6 sm:px-12 py-4 mix-blend-difference pointer-events-none hidden md:block">
+        <ul id="nav-scroll-container" class="flex items-center justify-end gap-8 font-mono text-xs uppercase tracking-widest font-bold pointer-events-auto">
+            <li><a href="#hero" class="nav-link outline-none">Start</a></li>
+            <li><a href="#identity-deck" class="nav-link outline-none">Cards</a></li>
+            <li><a href="#interface-deconstructed" class="nav-link outline-none">Anatomy</a></li>
+            <li><a href="#interaction-lab" class="nav-link outline-none">Interaction Lab</a></li>
+            <li><a href="#open-signal" class="nav-link outline-none">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="relative w-full z-10">
+
+        <!-- SCENE 1: HERO -->
+        <section id="hero" class="relative min-h-screen w-full flex items-center justify-center pt-20">
+            <div class="absolute top-[45%] left-[45%] -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none z-0 select-none overflow-hidden mix-blend-screen">
+                <h1 class="huge-title font-black text-outline opacity-20">MIKOŁAJ<br>SITEK</h1>
+            </div>
+
+            <div class="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-6 flex flex-col gap-6 reveal mt-12 lg:mt-0 relative">
+                    <div class="webgl-text-mask"></div>
+                    <div class="relative z-10">
+                        <div class="inline-flex items-center gap-2 border border-terminal-border bg-[#030712]/80 backdrop-blur-sm rounded-full px-4 py-1.5 w-max font-mono text-sm shadow-sm mb-4">
+                            <div class="w-2 h-2 rounded-full bg-bull animate-[pulse_2s_ease-in-out_infinite]"></div>
+                            MARKET STATUS: <span class="text-bull font-semibold">OPEN</span>
+                        </div>
+                        
+                        <h2 class="text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-tight text-white leading-[1.05] mt-2">
+                            Logika to <span class="text-bull">fundament.</span><br>
+                            Interfejs to <span class="text-terminal-highlight">doświadczenie.</span>
+                        </h2>
+                        
+                        <p class="text-lg text-terminal-text max-w-lg leading-relaxed mt-4">
+                            Creative Frontend Engineer. Konstruuję cyfrowe światy, w których solidna architektura spotyka się z dbałością o każdy detal animacji i mikrointerakcji.
+                        </p>
+
+                        <div class="flex flex-wrap gap-4 pt-6 font-mono text-sm uppercase tracking-wider font-bold">
+                            <a href="#identity-deck" class="action-btn solid px-8 py-4 bg-bull text-[#030712] rounded shadow-neon-green">
+                                <i class="fa-solid fa-layer-group" aria-hidden="true"></i> View Deck
+                            </a>
+                            <a href="#open-signal" class="action-btn ghost px-8 py-4 bg-[#030712]/80 backdrop-blur border border-terminal-border text-white rounded hover:border-terminal-text">
+                                <i class="fa-solid fa-satellite-dish" aria-hidden="true"></i> /connect
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 w-full flex items-center justify-center lg:justify-end relative">
+                    <div class="card-3d-wrapper reveal" style="transition-delay: 200ms;">
+                        <div class="collectible-card-3d" id="collectible-card-3d">
+                            <div class="card-inner-3d">
+                                <div class="card-content-3d">
+                                    <div class="flex justify-between items-center mb-4 font-mono text-xs uppercase tracking-wider">
+                                        <span class="text-terminal-text"><i class="fa-solid fa-fingerprint mr-2"></i>MSX // CREATIVE</span>
+                                        <span class="text-bull bg-bull/10 border border-bull/30 px-2 py-1 rounded">#0001</span>
+                                    </div>
+                                    <div class="flex-grow relative rounded-xl overflow-hidden border border-terminal-border/50 mb-5 group bg-[#0a101d]">
+                                        <!-- Solidny Fallback -->
+                                        <div class="absolute inset-0 flex flex-col items-center justify-center z-0">
+                                            <span class="font-mono text-terminal-text opacity-40 text-sm">Ja.png</span>
+                                        </div>
+                                        <img src="Ja.png" alt="Mikołaj Sitek" class="relative z-10 object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500 mix-blend-luminosity group-hover:mix-blend-normal" onerror="this.style.opacity='0'">
+                                        <div class="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none z-20"></div>
+                                        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-terminal-bg to-transparent opacity-60 z-20"></div>
+                                    </div>
+                                    <div class="border-t border-terminal-border/50 pt-4">
+                                        <h2 class="text-3xl font-bold text-terminal-highlight font-mono mb-1">$MIKOLAJ</h2>
+                                        <div class="text-sm text-terminal-text mb-4 font-mono flex items-center">
+                                            <span class="inline-block w-2 h-2 bg-bull rounded-full mr-2 animate-pulse"></span> Frontend / Motion / 3D
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 2: IDENTITY DECK (HAND OF CARDS - SCROLL EXPLOSION) -->
+        <section id="identity-deck" class="relative min-h-[300vh] bg-[#030712] border-t border-terminal-border/20">
+            <div class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+                
+                <div class="absolute top-12 md:top-24 w-full px-6 text-center z-50 pointer-events-none">
+                    <div class="font-mono text-bull text-xs uppercase tracking-widest mb-4">Identity Facets</div>
+                    <h2 class="editorial-heading font-bold text-white tracking-tight uppercase">Rozdanie <span class="text-bull">Kart.</span></h2>
+                    <p class="text-terminal-text mt-4 max-w-lg mx-auto bg-[#030712]/50 backdrop-blur-sm p-2 rounded-lg inline-block">Moje portfolio to nie pojedynczy ekran. To zbiór powiązanych systemów. <br/> <span class="text-bull">Przewijaj w dół, aby rozsunąć talię.</span></p>
+                </div>
+
+                <!-- Kontener z kartami -->
+                <div class="relative w-full max-w-7xl h-full flex items-center justify-center pointer-events-none identity-deck-container">
+                    
+                    <!-- Card 0: Ja.png (Top layer) -->
+                    <div class="identity-card" data-index="0" style="z-index: 50;">
+                        <!-- Solidny Fallback -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-transparent rounded-[18px] z-0">
+                            <span class="font-mono text-terminal-text opacity-40 text-sm">Ja.png</span>
+                        </div>
+                        <img src="Ja.png" alt="Creative Engineer" onerror="this.style.opacity='0'" />
+                        <div class="card-label">
+                            <span class="text-bull font-bold">01</span> / CREATIVE ENGINEER
+                        </div>
+                    </div>
+
+                    <!-- Card 1: Apki.png -->
+                    <div class="identity-card" data-index="1" style="z-index: 40;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-transparent rounded-[18px] z-0">
+                            <span class="font-mono text-terminal-text opacity-40 text-sm">Apki.png</span>
+                        </div>
+                        <img src="Apki.png" alt="System Architecture" onerror="this.style.opacity='0'" />
+                        <div class="card-label">
+                            <span class="text-bull font-bold">02</span> / SYSTEM ARCHITECTURE
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Gielda.png -->
+                    <div class="identity-card" data-index="2" style="z-index: 30;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-transparent rounded-[18px] z-0">
+                            <span class="font-mono text-terminal-text opacity-40 text-sm">Gielda.png</span>
+                        </div>
+                        <img src="Gielda.png" alt="Data Visualization" onerror="this.style.opacity='0'" />
+                        <div class="card-label">
+                            <span class="text-bull font-bold">03</span> / DATA VISUALIZATION
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Siatka.png -->
+                    <div class="identity-card" data-index="3" style="z-index: 20;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-transparent rounded-[18px] z-0">
+                            <span class="font-mono text-terminal-text opacity-40 text-sm">Siatka.png</span>
+                        </div>
+                        <img src="Siatka.png" alt="Strategy & Flow" onerror="this.style.opacity='0'" />
+                        <div class="card-label">
+                            <span class="text-bull font-bold">04</span> / STRATEGY & FLOW
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Noga.png (Bottom layer) -->
+                    <div class="identity-card" data-index="4" style="z-index: 10;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-transparent rounded-[18px] z-0">
+                            <span class="font-mono text-terminal-text opacity-40 text-sm">Noga.png</span>
+                        </div>
+                        <img src="Noga.png" alt="Performance" onerror="this.style.opacity='0'" />
+                        <div class="card-label">
+                            <span class="text-bull font-bold">05</span> / PERFORMANCE TACTICS
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 3: INTERFACE DECONSTRUCTED (SCROLL-DRIVEN EXPLODED VIEW) -->
+        <section id="interface-deconstructed" class="relative min-h-[300vh] border-t border-terminal-border/20 bg-[#030712]">
+            <div class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+                
+                <div class="absolute top-12 md:top-24 w-full px-6 text-center z-20 pointer-events-none">
+                    <div class="font-mono text-bull text-xs uppercase tracking-widest mb-4">Exploded View</div>
+                    <h2 class="editorial-heading font-bold text-white tracking-tight uppercase">Anatomia <span class="text-bull">Interfejsu.</span></h2>
+                    <p class="text-terminal-text mt-4 max-w-lg mx-auto bg-[#030712]/50 backdrop-blur-sm p-2 rounded-lg inline-block">Dobry interfejs nie jest jedną płaską warstwą. Składa się z problemu, struktury, logiki, UI, ruchu i dopracowania. Przewijaj, by przeanalizować.</p>
+                </div>
+
+                <div class="deconstructed-container w-full h-full flex items-center justify-center pt-24 pointer-events-none">
+                    <div class="exploded-stack group pointer-events-auto" id="exploded-stack">
+                        
+                        <!-- Layer 06: Polish (Top) -->
+                        <div class="layer-z-wrapper" data-layer-index="5">
+                            <div class="exploded-layer vis-polish">
+                                <!-- Model Slot dla opcjonalnego 3D -->
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual flex items-center justify-center">
+                                        <div class="w-20 h-20 rounded-full border border-bull/50 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                                            <div class="w-2 h-2 rounded-full bg-bull animate-ping"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-left">
+                                <div class="label-line-left"></div>
+                                <span class="block font-mono text-bull uppercase tracking-widest text-[0.65rem] mb-1">06 / Polish</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Dopracowanie</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Dopracowuję detal, feeling i spójność całego doświadczenia.</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 05: Motion -->
+                        <div class="layer-z-wrapper" data-layer-index="4">
+                            <div class="exploded-layer vis-motion">
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual relative">
+                                        <div class="motion-sweep"></div>
+                                        <div class="w-[80%] h-1 bg-terminal-border rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-right">
+                                <div class="label-line-right"></div>
+                                <span class="block font-mono text-terminal-text uppercase tracking-widest text-[0.65rem] mb-1">05 / Motion</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Ruch</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Dodaję ruch tam, gdzie pomaga zrozumieć zmianę albo reakcję.</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 04: Logic -->
+                        <div class="layer-z-wrapper" data-layer-index="3">
+                            <div class="exploded-layer vis-logic">
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual flex flex-wrap gap-4 p-8 items-center justify-center">
+                                        <div class="logic-dot"></div><div class="w-10 h-[1px] bg-terminal-border/50"></div><div class="logic-dot"></div>
+                                        <div class="w-full"></div>
+                                        <div class="logic-dot"></div><div class="w-10 h-[1px] bg-terminal-border/50"></div><div class="logic-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-left">
+                                <div class="label-line-left"></div>
+                                <span class="block font-mono text-terminal-text uppercase tracking-widest text-[0.65rem] mb-1">04 / Logic</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Logika</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Łączę stany, dane, edge case’y i zachowanie systemu.</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 03: Interface -->
+                        <div class="layer-z-wrapper" data-layer-index="2">
+                            <div class="exploded-layer vis-interface">
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual p-6 flex flex-col gap-4">
+                                        <div class="w-full h-8 interface-box"></div>
+                                        <div class="w-full flex-grow interface-box"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-right">
+                                <div class="label-line-right"></div>
+                                <span class="block font-mono text-terminal-text uppercase tracking-widest text-[0.65rem] mb-1">03 / Interface</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Design UI</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Przekładam strukturę na czytelny, responsywny i spójny interfejs.</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 02: Structure -->
+                        <div class="layer-z-wrapper" data-layer-index="1">
+                            <div class="exploded-layer vis-structure">
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual p-8 flex gap-4">
+                                        <div class="w-1/3 h-full border border-dashed border-terminal-border rounded"></div>
+                                        <div class="w-2/3 h-full border border-dashed border-terminal-border rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-left">
+                                <div class="label-line-left"></div>
+                                <span class="block font-mono text-terminal-text uppercase tracking-widest text-[0.65rem] mb-1">02 / Structure</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Struktura</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Układam flow, hierarchię i decyzje, zanim powstanie finalny ekran.</p>
+                            </div>
+                        </div>
+
+                        <!-- Layer 01: Problem (Bottom) -->
+                        <div class="layer-z-wrapper" data-layer-index="0">
+                            <div class="exploded-layer vis-problem">
+                                <div class="model-slot" data-model="interface_layer.glb">
+                                    <div class="fallback-visual">
+                                        <div class="font-mono text-4xl text-terminal-border opacity-20">???</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer-label label-right">
+                                <div class="label-line-right"></div>
+                                <span class="block font-mono text-terminal-text uppercase tracking-widest text-[0.65rem] mb-1">01 / Problem</span>
+                                <h4 class="text-lg font-bold text-white mb-1">Zrozumienie</h4>
+                                <p class="text-xs text-white/70 max-w-[200px]">Zaczynam od pytań, kontekstu i tego, co naprawdę trzeba uprościć.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCENE 4: INTERACTION LAB -->
+        <section id="interaction-lab" class="relative py-32 border-t border-terminal-border/20 bg-[#030712]">
+            <div class="max-w-7xl mx-auto px-6 sm:px-12 text-center reveal relative z-20 mb-20">
+                <div class="font-mono text-bull text-xs uppercase tracking-widest mb-4">Experiential UI</div>
+                <h2 class="editorial-heading font-bold text-white tracking-tight uppercase">Interaction <span class="text-bull">Lab.</span></h2>
+                <p class="text-terminal-text mt-4 max-w-lg mx-auto">Ruch nie jest dekoracją. Ruch pomaga zrozumieć, co właśnie zrobił system. Dotknij modułów poniżej.</p>
+            </div>
+
+            <div class="max-w-6xl mx-auto px-6 sm:px-12 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-20">
+                
+                <!-- Experiment 1: Magnetic Physics -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col items-center justify-center text-center reveal h-[300px] border border-terminal-border relative overflow-hidden">
+                    <div class="absolute top-4 left-4 font-mono text-[0.6rem] text-terminal-text uppercase">Exp // 01</div>
+                    <h3 class="text-white font-bold mb-8">Magnetic Physics</h3>
+                    
+                    <div class="magnetic-wrap" id="mag-wrap">
+                        <button class="magnetic-btn w-20 h-20 bg-terminal-bg border border-terminal-border rounded-full flex items-center justify-center shadow-panel text-white hover:border-bull hover:text-bull">
+                            <i class="fa-solid fa-magnet text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Experiment 2: State Feedback -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col items-center justify-center text-center reveal h-[300px] border border-terminal-border relative overflow-hidden" style="transition-delay: 100ms;">
+                    <div class="absolute top-4 left-4 font-mono text-[0.6rem] text-terminal-text uppercase">Exp // 02</div>
+                    <h3 class="text-white font-bold mb-8">Meaningful State</h3>
+                    
+                    <button class="feedback-btn px-6 py-3 bg-terminal-bg border border-terminal-border rounded-lg text-sm font-mono text-terminal-text flex items-center justify-center w-40 h-12" id="feedback-btn-test">
+                        <span class="btn-text">Idle State</span>
+                        <i class="fa-solid fa-spinner animate-spin hidden btn-icon ml-2"></i>
+                        <i class="fa-solid fa-check hidden btn-success ml-2"></i>
+                    </button>
+                    <div class="font-mono text-[0.6rem] mt-4 opacity-50">Click to test flow</div>
+                </div>
+
+                <!-- Experiment 3: 3D Spatial Tilt -->
+                <div class="glass-panel p-8 rounded-2xl flex flex-col items-center justify-center text-center reveal h-[300px] border border-terminal-border relative perspective-[1000px]" style="transition-delay: 200ms;">
+                    <div class="absolute top-4 left-4 font-mono text-[0.6rem] text-terminal-text uppercase">Exp // 03</div>
+                    <h3 class="text-white font-bold mb-8">Spatial Context</h3>
+                    
+                    <!-- MODEL SLOT dla opcjonalnego 3D elementu -->
+                    <div class="model-slot w-32 h-32" data-model="interaction_cube.glb">
+                        <div class="fallback-visual">
+                            <div class="tilt-element w-32 h-32 bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-xl border border-terminal-border shadow-panel flex flex-col items-center justify-center transform-style-3d cursor-crosshair">
+                                <div class="w-8 h-8 rounded-full border border-bull/50" style="transform: translateZ(30px);"></div>
+                                <div class="font-mono text-[0.5rem] mt-2 text-bull" style="transform: translateZ(20px);">TILT ME</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SCENE 5: OPEN SIGNAL -->
+        <section id="open-signal" class="relative pt-40 pb-48 border-t border-terminal-border/30 overflow-hidden z-20 bg-black min-h-screen flex items-center">
+            
+            <div class="absolute inset-0 flex justify-center items-center pointer-events-none z-0">
+                <div class="w-[80vw] h-[80vw] rounded-full bg-radial-gradient from-bull/5 to-transparent blur-3xl"></div>
+            </div>
+
+            <div class="max-w-4xl mx-auto px-6 sm:px-12 text-center reveal relative z-10 w-full">
+                <div class="font-mono text-bull text-[0.65rem] uppercase tracking-widest mb-6 inline-block pb-2">Open Signal</div>
+                
+                <!-- MODEL SLOT & CSS FALLBACK (Contact Card) -->
+                <div class="model-slot w-full relative flex flex-col items-center justify-center min-h-[450px]" data-model="contact_card.glb">
+                    
+                    <div class="fallback-visual absolute inset-0 flex items-center justify-center">
+                        
+                        <!-- Signal Rings -->
+                        <div class="signal-orbit orbit-1"></div>
+                        <div class="signal-orbit orbit-2"></div>
+                        <div class="signal-orbit orbit-3"></div>
+
+                        <!-- Central Contact Card -->
+                        <div class="relative z-20 glass-panel bg-[#030712]/60 border border-bull/20 rounded-2xl p-10 sm:p-16 max-w-2xl w-full shadow-[0_0_80px_rgba(16,185,129,0.15)] backdrop-blur-2xl transition-all duration-500 hover:border-bull/50 hover:shadow-neon-green-intense">
+                            
+                            <h2 class="font-black tracking-tight mb-6 uppercase text-white" style="font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1;">
+                                Let's build something<br><span class="text-bull">that feels useful.</span>
+                            </h2>
+                            
+                            <p class="text-sm sm:text-base text-terminal-text max-w-md mx-auto mb-10 leading-relaxed">
+                                Jeśli szukasz osoby, która łączy logikę, interfejs i doświadczenie w jeden działający system — odezwij się.
+                            </p>
+                            
+                            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 font-mono text-sm uppercase tracking-wider relative z-30 pointer-events-auto">
+                                <a href="mailto:contact@example.com" class="action-btn solid px-8 py-4 bg-bull text-[#030712] font-bold rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-neon-green-intense hover:scale-105">
+                                    Start Conversation
+                                </a>
+                                <div class="flex gap-4">
+                                    <a href="#" class="action-btn ghost w-14 h-14 bg-[#0a101d]/80 backdrop-blur-md text-terminal-highlight border border-terminal-border rounded-full hover:border-bull hover:text-bull flex items-center justify-center">
+                                        <i class="fa-brands fa-linkedin text-lg"></i>
+                                    </a>
+                                    <a href="#" class="action-btn ghost w-14 h-14 bg-[#0a101d]/80 backdrop-blur-md text-terminal-highlight border border-terminal-border rounded-full hover:border-bull hover:text-bull flex items-center justify-center">
+                                        <i class="fa-brands fa-github text-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-terminal-border/50 bg-[#030712] py-8 z-20 relative">
+        <div class="max-w-7xl mx-auto px-6 sm:px-12 text-center text-terminal-text font-mono text-[0.65rem] sm:text-xs flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>MSX_CORE v10.0.0_DECK</p>
+            <p>© 2026 MIKOŁAJ SITEK. ALL RIGHTS RESERVED.</p>
+            <p class="text-bull flex items-center"><span class="mr-2 animate-terminal-blink inline-block w-2 h-3 bg-bull" aria-hidden="true"></span> SYSTEM ONLINE</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('js-enabled');
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const isTouchDevice = matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+            /* ==========================================================================
+               0. 3D MODEL LOADER (Placeholder / GLB)
+               ========================================================================== */
+            const init3DModels = () => {
+                if (typeof THREE === 'undefined') return;
+
+                const USE_REAL_MODELS = false;
+                const slots = document.querySelectorAll('.model-slot');
+                const loader = USE_REAL_MODELS && THREE.GLTFLoader ? new THREE.GLTFLoader() : null;
+
+                slots.forEach(slot => {
+                    const modelUrl = slot.getAttribute('data-model');
+                    if (!modelUrl) return;
+
+                    const canvasContainer = document.createElement('div');
+                    canvasContainer.style.position = 'absolute';
+                    canvasContainer.style.inset = '0';
+                    canvasContainer.style.zIndex = '5';
+                    canvasContainer.style.pointerEvents = 'none';
+                    slot.appendChild(canvasContainer);
+
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(45, slot.clientWidth / slot.clientHeight, 0.1, 100);
+                    camera.position.z = 5;
+
+                    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                    renderer.setSize(slot.clientWidth, slot.clientHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    canvasContainer.appendChild(renderer.domElement);
+
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+                    scene.add(ambientLight);
+                    const dirLight = new THREE.DirectionalLight(0x10b981, 3.0);
+                    dirLight.position.set(5, 5, 5);
+                    scene.add(dirLight);
+
+                    let model;
+
+                    if (USE_REAL_MODELS && loader) {
+                        loader.load(modelUrl, (gltf) => {
+                            model = gltf.scene;
+                            const box = new THREE.Box3().setFromObject(model);
+                            const center = box.getCenter(new THREE.Vector3());
+                            const size = box.getSize(new THREE.Vector3());
+                            model.position.x += (model.position.x - center.x);
+                            model.position.y += (model.position.y - center.y);
+                            model.position.z += (model.position.z - center.z);
+                            
+                            const maxDim = Math.max(size.x, size.y, size.z);
+                            if (maxDim > 0) {
+                                const scale = 3.5 / maxDim;
+                                model.scale.set(scale, scale, scale);
+                            }
+                            scene.add(model);
+                            slot.classList.add('has-model');
+                        });
+                    } else {
+                        let geometry;
+                        if (modelUrl === 'evidence_orb.glb') {
+                            geometry = new THREE.IcosahedronGeometry(1.2, 1);
+                        } else if (modelUrl === 'interface_layer.glb') {
+                            geometry = new THREE.BoxGeometry(3.5, 2, 0.05); // Thin layer placeholder
+                        } else if (modelUrl === 'interaction_cube.glb') {
+                            geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+                        } else if (modelUrl === 'contact_card.glb') {
+                            geometry = new THREE.BoxGeometry(4.5, 2.5, 0.1);
+                        } else {
+                            geometry = new THREE.SphereGeometry(1, 16, 16);
+                        }
+
+                        const material = new THREE.MeshStandardMaterial({
+                            color: 0x10b981, wireframe: true, emissive: 0x10b981,
+                            emissiveIntensity: 0.6, transparent: true, opacity: 0.8
+                        });
+                        model = new THREE.Mesh(geometry, material);
+                        
+                        const coreMat = new THREE.MeshStandardMaterial({ color: 0x030712, transparent: true, opacity: 0.9 });
+                        const core = new THREE.Mesh(geometry, coreMat);
+                        core.scale.set(0.98, 0.98, 0.98);
+                        model.add(core);
+
+                        if (modelUrl === 'contact_card.glb') {
+                            model.rotation.x = Math.PI / 4;
+                        }
+
+                        scene.add(model);
+                        slot.classList.add('has-model');
+                    }
+
+                    const resizeObserver = new ResizeObserver(() => {
+                        if(slot.clientWidth === 0 || slot.clientHeight === 0) return;
+                        renderer.setSize(slot.clientWidth, slot.clientHeight);
+                        camera.aspect = slot.clientWidth / slot.clientHeight;
+                        camera.updateProjectionMatrix();
+                    });
+                    resizeObserver.observe(slot);
+
+                    const animate = () => {
+                        requestAnimationFrame(animate);
+                        if (model) {
+                            if (modelUrl === 'contact_card.glb') {
+                                model.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1;
+                                model.position.y = Math.sin(Date.now() * 0.001) * 0.1;
+                            } else if (modelUrl === 'interface_layer.glb') {
+                                // Layers don't rotate wildly
+                            } else {
+                                model.rotation.y += 0.005;
+                                model.rotation.x += 0.002;
+                                model.position.y = Math.sin(Date.now() * 0.0015) * 0.15;
+                            }
+                        }
+                        renderer.render(scene, camera);
+                    };
+                    animate();
+                });
+            };
+            
+            if(!prefersReducedMotion) setTimeout(init3DModels, 300);
+
+            /* ==========================================================================
+               1. IDENTITY DECK (SCROLL-DRIVEN CARD SPREAD)
+               ========================================================================== */
+            const deckSection = document.getElementById('identity-deck');
+            const cards = document.querySelectorAll('.identity-card');
+            let deckProgress = 0;
+            let targetDeckProgress = 0;
+            let isDeckVisible = false;
+
+            if (deckSection && cards.length > 0 && !prefersReducedMotion) {
+                const observer = new IntersectionObserver(entries => {
+                    isDeckVisible = entries[0].isIntersecting;
+                }, { threshold: 0 });
+                observer.observe(deckSection);
+
+                window.addEventListener('scroll', () => {
+                    if (isDeckVisible) {
+                        const rect = deckSection.getBoundingClientRect();
+                        const scrollDist = -rect.top;
+                        
+                        if (scrollDist >= 0) {
+                            // Rozsunięcie osiągnie 100% po przewinięciu 60% wysokości ekranu
+                            targetDeckProgress = Math.max(0, Math.min(1, scrollDist / (window.innerHeight * 0.6)));
+                        } else {
+                            targetDeckProgress = 0;
+                        }
+                    }
+                }, { passive: true });
+
+                const animateDeck = () => {
+                    if (isDeckVisible) {
+                        deckProgress += (targetDeckProgress - deckProgress) * 0.08;
+
+                        const isMobile = window.innerWidth < 768;
+                        const spreadMultX = isMobile ? 0.4 : 1; 
+                        const spreadMultY = isMobile ? 1.2 : 1;
+
+                        cards.forEach((card) => {
+                            const index = parseInt(card.getAttribute('data-index'));
+                            
+                            // Znacznie szersze i bardziej łukowate pozycje docelowe!
+                            const transforms = [
+                                { x: 0,    y: -60,  rot: 0,   z: 50 }, // 0: Ja.png (Środek top)
+                                { x: -350, y: 10,   rot: -12, z: 40 }, // 1: Apki (Lewa wyżej)
+                                { x: 350,  y: 10,   rot: 12,  z: 30 }, // 2: Gielda (Prawa wyżej)
+                                { x: -650, y: 160,  rot: -25, z: 20 }, // 3: Siatka (Lewa dół mocno w bok)
+                                { x: 650,  y: 160,  rot: 25,  z: 10 }  // 4: Noga (Prawa dół mocno w bok)
+                            ];
+
+                            const baseX = 0;
+                            const baseY = 0;
+                            const baseRot = (index - 2) * 4;
+
+                            const t = transforms[index];
+                            
+                            const curX = baseX + (t.x * spreadMultX - baseX) * deckProgress;
+                            const curY = baseY + (t.y * spreadMultY - baseY) * deckProgress;
+                            const curRot = baseRot + (t.rot - baseRot) * deckProgress;
+                            
+                            card.style.transform = `translate(-50%, -50%) translate3d(${curX}px, ${curY}px, 0) rotateZ(${curRot}deg)`;
+                            card.style.zIndex = t.z;
+
+                            const labelOpacity = Math.max(0, (deckProgress - 0.6) / 0.4);
+                            card.style.setProperty('--label-opacity', labelOpacity);
+                        });
+                    }
+                    requestAnimationFrame(animateDeck);
+                };
+                animateDeck();
+            } else if (prefersReducedMotion && cards.length > 0) {
+                cards.forEach((card) => {
+                    const index = parseInt(card.getAttribute('data-index'));
+                    card.style.transform = `translate(-50%, -50%) translate3d(${index * 40 - 80}px, 0, 0)`;
+                    card.style.setProperty('--label-opacity', '1');
+                });
+            }
+
+            /* ==========================================================================
+               2. INTERFACE DECONSTRUCTED (SCROLL DRIVEN)
+               ========================================================================== */
+            const deconstructSection = document.getElementById('interface-deconstructed');
+            const layerWrappers = document.querySelectorAll('.layer-z-wrapper');
+            let currentProgress = 0;
+            let targetProgress = 0;
+            let isDeconstructVisible = false;
+
+            if (deconstructSection && layerWrappers.length > 0 && !prefersReducedMotion) {
+                const observer = new IntersectionObserver(entries => {
+                    isDeconstructVisible = entries[0].isIntersecting;
+                }, { threshold: 0 });
+                observer.observe(deconstructSection);
+
+                const updateScroll = () => {
+                    if (isDeconstructVisible) {
+                        const rect = deconstructSection.getBoundingClientRect();
+                        const scrollDist = -rect.top;
+                        
+                        if(scrollDist >= 0) {
+                            targetProgress = Math.max(0, Math.min(1, scrollDist / (window.innerHeight * 0.6)));
+                        } else {
+                            targetProgress = 0;
+                        }
+                    }
+                };
+
+                window.addEventListener('scroll', updateScroll, { passive: true });
+
+                const animateLayers = () => {
+                    if (isDeconstructVisible) {
+                        currentProgress += (targetProgress - currentProgress) * 0.1;
+
+                        layerWrappers.forEach((wrapper) => {
+                            const index = parseInt(wrapper.getAttribute('data-layer-index'));
+                            const baseZ = index * 4;
+                            const explodedZ = index * 90;
+                            const currentZ = baseZ + (explodedZ - baseZ) * currentProgress;
+                            
+                            wrapper.style.transform = `translateZ(${currentZ}px)`;
+
+                            const labelOpacity = Math.max(0, (currentProgress - 0.2) / 0.3);
+                            wrapper.style.setProperty('--label-opacity', labelOpacity);
+                        });
+                    }
+                    requestAnimationFrame(animateLayers);
+                };
+                animateLayers();
+            } else if (prefersReducedMotion && layerWrappers.length > 0) {
+                layerWrappers.forEach((wrapper) => {
+                    const index = parseInt(wrapper.getAttribute('data-layer-index'));
+                    wrapper.style.transform = `translateZ(${index * 70}px)`;
+                    wrapper.style.setProperty('--label-opacity', '1');
+                });
+            }
+
+            /* ==========================================================================
+               3. INTERACTION LAB (MAGNETIC BUTTON)
+               ========================================================================== */
+            const magWrap = document.getElementById('mag-wrap');
+            const magBtn = document.querySelector('.magnetic-btn');
+            if (magWrap && magBtn && !prefersReducedMotion && !isTouchDevice) {
+                magWrap.addEventListener('mousemove', (e) => {
+                    const rect = magWrap.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    magBtn.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px)`;
+                });
+                magWrap.addEventListener('mouseleave', () => {
+                    magBtn.style.transform = `translate(0px, 0px)`;
+                });
+            }
+
+            /* ==========================================================================
+               4. INTERACTION LAB (STATE FEEDBACK BUTTON)
+               ========================================================================== */
+            const fbBtn = document.getElementById('feedback-btn-test');
+            if(fbBtn) {
+                const text = fbBtn.querySelector('.btn-text');
+                const spinner = fbBtn.querySelector('.btn-icon');
+                const success = fbBtn.querySelector('.btn-success');
+                let isAnimating = false;
+
+                fbBtn.addEventListener('mouseenter', () => { if(!isAnimating) fbBtn.classList.add('state-hover'); });
+                fbBtn.addEventListener('mouseleave', () => { if(!isAnimating) fbBtn.classList.remove('state-hover'); });
+
+                fbBtn.addEventListener('click', () => {
+                    if(isAnimating) return;
+                    isAnimating = true;
+                    fbBtn.classList.remove('state-hover');
+                    fbBtn.classList.add('state-active');
+                    text.textContent = 'Processing...';
+                    spinner.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        fbBtn.classList.remove('state-active');
+                        fbBtn.classList.add('state-success');
+                        spinner.classList.add('hidden');
+                        success.classList.remove('hidden');
+                        text.textContent = 'Action Completed';
+                        setTimeout(() => {
+                            fbBtn.classList.remove('state-success');
+                            success.classList.add('hidden');
+                            text.textContent = 'Idle State';
+                            isAnimating = false;
+                        }, 2000);
+                    }, 1500);
+                });
+            }
+
+            /* ==========================================================================
+               5. INTERACTION LAB (TILT ELEMENT)
+               ========================================================================== */
+            const tiltEl = document.querySelector('.tilt-element');
+            if(tiltEl && !prefersReducedMotion && !isTouchDevice) {
+                const tiltWrap = tiltEl.parentElement;
+                tiltWrap.addEventListener('mousemove', (e) => {
+                    const rect = tiltWrap.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -20; 
+                    const rotateY = ((x - centerX) / centerX) * 20;
+                    tiltEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                tiltWrap.addEventListener('mouseleave', () => {
+                    tiltEl.style.transform = `rotateX(0deg) rotateY(0deg)`;
+                });
+            }
+
+            /* ==========================================================================
+               6. STICKY NAV - SCROLLSPY
+               ========================================================================== */
+            const sections = Array.from(document.querySelectorAll('section[id]'));
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navContainer = document.getElementById('nav-scroll-container');
+
+            if (sections.length > 0 && navLinks.length > 0) {
+                const navObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.id;
+                            navLinks.forEach(link => {
+                                link.classList.remove('is-active', 'text-white');
+                                if (link.getAttribute('href') === `#${id}`) {
+                                    link.classList.add('is-active', 'text-white');
+                                    if (navContainer && window.innerWidth < 640) {
+                                        const scrollPos = link.offsetLeft - (navContainer.clientWidth / 2) + (link.clientWidth / 2);
+                                        navContainer.scrollTo({ left: scrollPos, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }, { rootMargin: '-100px 0px -40% 0px' });
+                sections.forEach(sec => navObserver.observe(sec));
+            }
+
+            /* ==========================================================================
+               7. REVEAL OBSERVER
+               ========================================================================== */
+            const revealElements = document.querySelectorAll('.reveal');
+            if (revealElements.length > 0) {
+                const revealObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: null, rootMargin: '0px', threshold: 0.1 });
+                revealElements.forEach(el => revealObserver.observe(el));
+            }
+            setTimeout(() => { const hero = document.getElementById('hero'); if (hero) hero.classList.add('active'); }, 100);
+
+            /* ==========================================================================
+               8. PROTECTED: 3D TRADING CARD PHYSICS
+               ========================================================================== */
+            const card = document.getElementById('collectible-card-3d');
+            if(card && !prefersReducedMotion && !isTouchDevice) {
+                let currentRotateX = 0; let currentRotateY = 0;
+                let cardMouseX = 0; let cardMouseY = 0;
+                let isCardHovered = false; let cardRafId = null;
+                
+                const updateCardPhysics = () => {
+                    currentRotateX += (cardMouseY - currentRotateX) * 0.08;
+                    currentRotateY += (cardMouseX - currentRotateY) * 0.08;
+                    card.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    
+                    if (!isCardHovered && Math.abs(currentRotateX) < 0.1 && Math.abs(currentRotateY) < 0.1) {
+                        card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                        cancelAnimationFrame(cardRafId); cardRafId = null; return;
+                    }
+                    cardRafId = requestAnimationFrame(updateCardPhysics);
+                };
+                
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width * 2 - 1;
+                    const y = (e.clientY - rect.top) / rect.height * 2 - 1;
+                    cardMouseY = -y * 4; cardMouseX = x * 6;  
+                    isCardHovered = true;
+                    if (!cardRafId) cardRafId = requestAnimationFrame(updateCardPhysics);
+                });
+                card.addEventListener('mouseleave', () => {
+                    isCardHovered = false; cardMouseX = 0; cardMouseY = 0;
+                    if (!cardRafId) requestAnimationFrame(updateCardPhysics);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
