@@ -42,6 +42,11 @@ export function AvatarController({ progress, onReady }: Props) {
 
   // ── Normalizacja modelu: wysokość = 1, stopy na y=0, środek x/z ──
   const model = useMemo(() => {
+    // Reset przed pomiarem — StrictMode (dev) woła useMemo 2×, a mutujemy
+    // współdzieloną scenę; bez resetu drugi przebieg cofa normalizację.
+    scene.scale.setScalar(1);
+    scene.position.set(0, 0, 0);
+    scene.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(scene);
     const size = box.getSize(new THREE.Vector3());
     scene.scale.setScalar(1 / (size.y || 1));
