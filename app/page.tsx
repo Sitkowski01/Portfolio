@@ -1,8 +1,6 @@
 import Ticker from "@/components/Ticker";
 import Hero from "@/components/Hero";
-import Fundamentals from "@/components/Fundamentals";
 import Projects from "@/components/Projects";
-import CaseStudy from "@/components/CaseStudy";
 import TrackRecord from "@/components/TrackRecord";
 import TechKeyboard from "@/components/TechKeyboard";
 import Profile from "@/components/Profile";
@@ -37,12 +35,10 @@ export default function Home() {
       {/* Main Content Container */}
       <main className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-28 pb-24 flex flex-col gap-32">
         <Hero />
-        <Fundamentals />
-        <Projects />
-        <CaseStudy />
-        <TrackRecord />
         <TechKeyboard />
         <Profile />
+        <Projects />
+        <TrackRecord />
         <Interests />
         <Ratings />
         <Contact />

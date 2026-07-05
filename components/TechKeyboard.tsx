@@ -83,7 +83,7 @@ const ROWS: Key[][] = [
     k("Expo", "Expo", "Mobile", "#e5e7eb"),
     k("Vite", "Vite", "Build tool", "#b97bff"),
     k("Three", "Three.js", "WebGL / 3D", "#e5e7eb"),
-    sp("\\", 1),
+    k("NG", "Angular", "Framework", "#dd0031"),
   ],
   [
     sp("Caps", 1.75),
@@ -173,7 +173,14 @@ export default function TechKeyboard() {
   const reduce = useReducedMotion();
   const tr = useTr();
   const [hover, setHover] = useState<SkillKey | null>(null);
+  // Ostatnia pokazana technologia — trzymana też podczas zanikania pigułki,
+  // żeby przy zejściu z klawisza nie zapadała się do pustego „—" (migający artefakt).
+  const [shown, setShown] = useState<SkillKey | null>(null);
   const catLabel = (c: string) => tr(c, CAT_EN[c] ?? c);
+  const showKey = (key: SkillKey) => {
+    setHover(key);
+    setShown(key);
+  };
 
   return (
     // Bez klasy `reveal` — to wejście robi framer-motion (inaczej reveal
@@ -224,11 +231,11 @@ export default function TechKeyboard() {
                     }
                     variants={keyVar}
                     custom={tiltZ}
-                    onMouseEnter={() => isSkill && setHover(key)}
+                    onMouseEnter={() => isSkill && showKey(key)}
                     onMouseLeave={() =>
                       isSkill && setHover((h) => (h === key ? null : h))
                     }
-                    onFocus={() => isSkill && setHover(key)}
+                    onFocus={() => isSkill && showKey(key)}
                     onBlur={() => setHover(null)}
                     aria-label={isSkill ? `${key.name} — ${catLabel(key.cat)}` : key.cap}
                   >
@@ -253,16 +260,16 @@ export default function TechKeyboard() {
             >
               <span
                 className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: hover?.color ?? "transparent" }}
+                style={{ backgroundColor: shown?.color ?? "transparent" }}
               />
               <span
                 className="font-mono text-sm font-bold"
-                style={{ color: hover?.color ?? "transparent" }}
+                style={{ color: shown?.color ?? "transparent" }}
               >
-                {hover?.name ?? "—"}
+                {shown?.name ?? "—"}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-terminal-text">
-                {hover ? catLabel(hover.cat) : ""}
+              <span className="font-mono text-[0.65rem] uppercase tracking-widest text-terminal-text">
+                {shown ? catLabel(shown.cat) : ""}
               </span>
             </motion.div>
           </div>

@@ -5,21 +5,16 @@ import type { MutableRefObject } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations, ContactShadows } from "@react-three/drei";
-import { MODEL_URL, SCENES, SCENE_COUNT, WALK_CLIP, AVATAR_HOME } from "./scenes";
+import { MODEL_URL, SCENES, SCENE_COUNT, AVATAR_CLIP, AVATAR_HOME } from "./scenes";
 
-// Wstępne pobranie modelu zanim sekcja wejdzie w kadr.
-useGLTF.preload(MODEL_URL);
+// Bez useGLTF.preload na poziomie modułu — pobierałby 11 MB także w trybie
+// statycznym (reduced-motion / brak WebGL). Suspense w Canvas startuje pobieranie
+// i tak od razu, bo sekcja jest na górze strony.
 
 const POS_LAMBDA = 3.2; // tempo dampowania pozycji
 const ROT_LAMBDA = 3.0;
 const SCALE_LAMBDA = 3.0;
 const GROUND_Y = 0;
-
-// Tempo chodu z prędkości scrolla:
-const WALK_GAIN = 11; // ile „prędkości scrolla" zamienia się na tempo kroku
-const WALK_MIN = 0.15; // minimalne tempo, gdy stoisz (delikatne, nie zamarza)
-const WALK_MAX = 1.5; // sufit przy szybkim scrollu
-const WALK_SMOOTH = 0.09; // wygładzenie tempa (mniejsze = gładziej)
 
 type Props = {
   progress: MutableRefObject<number>;
@@ -31,8 +26,8 @@ export function AvatarController({ progress, onReady }: Props) {
   const shadow = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF(MODEL_URL);
 
-  // ── Chód W MIEJSCU: usuwamy ścieżki translacji (root motion), zostają same
-  //    rotacje kości. Inaczej biodra „odjeżdżają" i avatar dryfuje w bok. ──
+  // ── Animacja W MIEJSCU: usuwamy ścieżki translacji (root motion), zostają
+  //    same rotacje kości. Inaczej biodra „odjeżdżają" i avatar dryfuje. ──
   const inPlaceClips = useMemo(
     () =>
       animations.map((clip) => {
@@ -44,9 +39,6 @@ export function AvatarController({ progress, onReady }: Props) {
   );
 
   const { actions } = useAnimations(inPlaceClips, group);
-
-  const walkSpeed = useRef(0);
-  const lastProgress = useRef(0);
 
   // ── Normalizacja modelu: wysokość = 1, stopy na y=0, środek x/z ──
   const model = useMemo(() => {
@@ -68,9 +60,9 @@ export function AvatarController({ progress, onReady }: Props) {
     return scene;
   }, [scene]);
 
-  // ── Start: odpal chód w pętli (tempo ustawiamy co klatkę) ──
+  // ── Start: odpal animację w nieskończonej pętli, w stałym tempie ──
   useEffect(() => {
-    const a = actions[WALK_CLIP];
+    const a = actions[AVATAR_CLIP];
     if (a) {
       a.setLoop(THREE.LoopRepeat, Infinity);
       a.reset().fadeIn(0.4).play();
@@ -85,8 +77,6 @@ export function AvatarController({ progress, onReady }: Props) {
     const dt = Math.min(delta, 0.05);
 
     const p = progress.current;
-    const vel = Math.abs(p - lastProgress.current) / Math.max(dt, 1e-3);
-    lastProgress.current = p;
 
     const idx = Math.max(
       0,
@@ -102,16 +92,6 @@ export function AvatarController({ progress, onReady }: Props) {
     }
     g.visible = true;
     if (shadow.current) shadow.current.visible = true;
-
-    // ── Tempo chodu = prędkość scrolla (wygładzone, z dolnym progiem) ──
-    const targetSpeed = THREE.MathUtils.clamp(
-      WALK_MIN + vel * WALK_GAIN,
-      WALK_MIN,
-      WALK_MAX
-    );
-    walkSpeed.current += (targetSpeed - walkSpeed.current) * WALK_SMOOTH;
-    const act = actions[WALK_CLIP];
-    if (act) act.timeScale = walkSpeed.current;
 
     // ── Osadzenie sceny → płynny transform (pozycja świata, prawa strona) ──
     const pos = av.position;

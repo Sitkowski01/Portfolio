@@ -14,6 +14,7 @@ export type Project = {
   change: Loc;
   title: Loc;
   flagship?: boolean;
+  edu?: boolean;
   logo?: string;
   tags: string[];
   shortDescription: Loc;
@@ -69,7 +70,50 @@ const projects: Project[] = [
     ],
     demoUrl: "#",
     githubUrl: "https://github.com/Sitkowski01/SkanerBiznes",
-    demoLabel: { pl: "Google Play", en: "Google Play" },
+    demoLabel: { pl: "Wkrótce w Google Play", en: "Coming to Google Play" },
+  },
+  {
+    // Screeny: wrzuć do public/projects/magisterka/ i dopisz ścieżki do `images`
+    // (pusta tablica = placeholder z tickerem).
+    ticker: "$MGR",
+    category: { pl: "Praca magisterska · AI / Full-stack", en: "Master's thesis · AI / Full-stack" },
+    change: { pl: "Praca magisterska", en: "Master's thesis" },
+    title: { pl: "AI triage medyczny", en: "Medical AI triage" },
+    edu: true,
+    tags: ["Angular", "TypeScript", "Node.js", "REST API", "MongoDB", "Machine Learning"],
+    shortDescription: {
+      pl: "Praca magisterska (ZUT) — prototyp full-stack z warstwą ML wspierający triage pacjentów. 90% trafności na 698 formularzach.",
+      en: "Master's thesis (ZUT) — a full-stack prototype with an ML layer supporting patient triage. 90% accuracy on 698 forms.",
+    },
+    description: {
+      pl: "Praca magisterska obroniona na ZUT w Szczecinie (specjalizacja UX). Problem: wstępna ocena, którzy pacjenci wymagają pilnej uwagi, jest wolna i podatna na błąd — czy model ML na danych z formularzy realnie wspomoże tę decyzję? Podejście: zebrałem i przetworzyłem 698 formularzy, zbudowałem prototyp full-stack — front w Angular/TypeScript (formularz + wynik), backend w Node.js (REST API), dane w MongoDB — a model klasyfikuje ryzyko i wspiera decyzję triage'ową, całość projektowana human-centered. Wynik: 90% trafności w triage'u i 40% skuteczności w przewidywaniu konkretnej choroby, przy zachowaniu dostępnego, przejrzystego interfejsu.",
+      en: "Master's thesis defended at ZUT Szczecin (UX specialization). Problem: initial assessment of which patients need urgent attention is slow and error-prone — can an ML model on form data genuinely support that decision? Approach: I collected and processed 698 forms and built a full-stack prototype — frontend in Angular/TypeScript (form + result), backend in Node.js (REST API), data in MongoDB — with a model that classifies risk and supports the triage decision, all designed human-centered. Result: 90% triage accuracy and 40% accuracy in predicting a specific disease, while keeping an accessible, transparent interface.",
+    },
+    highlights: [
+      { pl: "Zebrane i przetworzone 698 formularzy pacjentów", en: "Collected and processed 698 patient forms" },
+      { pl: "Front Angular/TypeScript, backend Node.js (REST API), dane MongoDB", en: "Angular/TypeScript frontend, Node.js (REST API) backend, MongoDB data" },
+      { pl: "Model ML klasyfikuje ryzyko i wspiera decyzję triage'ową", en: "ML model classifies risk and supports the triage decision" },
+      { pl: "Projektowane human-centered (specjalizacja UX)", en: "Designed human-centered (UX specialization)" },
+    ],
+    stats: [
+      { label: { pl: "Trafność triage'u", en: "Triage accuracy" }, value: "90%" },
+      { label: { pl: "Formularzy pacjentów", en: "Patient forms" }, value: "698" },
+      { label: { pl: "Przewidywanie choroby", en: "Disease prediction" }, value: "40%" },
+      { label: { pl: "Uczelnia", en: "University" }, value: "ZUT" },
+    ],
+    images: [
+      "/projects/magisterka/obrona.webp",
+      "/projects/magisterka/krok1.webp",
+      "/projects/magisterka/krok2.webp",
+      "/projects/magisterka/krok3_p1.webp",
+      "/projects/magisterka/krok3_part2.webp",
+      "/projects/magisterka/krok4.webp",
+      "/projects/magisterka/krok5.webp",
+      "/projects/magisterka/wynik_pomaranczowy.webp",
+    ],
+    demoUrl: "#",
+    githubUrl: "https://github.com/Sitkowski01/magisterka",
+    demoLabel: { pl: "Praca magisterska", en: "Master's thesis" },
   },
   {
     ticker: "$SPLIT",
@@ -418,6 +462,7 @@ export default function Projects() {
         {projects.map((project, i) => {
           const cover = project.images[0];
           const isConcept = project.change.pl.trim().startsWith("◆");
+          const isEdu = project.edu === true;
           const title = tr(project.title.pl, project.title.en);
           return (
             <motion.button
@@ -429,7 +474,9 @@ export default function Projects() {
               className={`group relative text-left glass-panel rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-[border-color,box-shadow] duration-300 ${
                 project.flagship
                   ? "sm:col-span-2 border border-bull/40 shadow-neon-green hover:shadow-neon-green-intense"
-                  : "border border-terminal-border hover:border-bull/60 hover:shadow-neon-green"
+                  : isEdu
+                    ? "border border-sky-400/40 hover:border-sky-400/70 hover:shadow-[0_0_24px_rgba(56,189,248,0.25)]"
+                    : "border border-terminal-border hover:border-bull/60 hover:shadow-neon-green"
               }`}
             >
               {/* COVER — rozmyte tło wypełnia kadr, ostry screen wycentrowany */}
@@ -486,14 +533,21 @@ export default function Projects() {
                       Flagship
                     </span>
                   )}
+                  {isEdu && (
+                    <span className="font-mono text-[0.55rem] uppercase tracking-widest text-sky-400 bg-sky-400/10 border border-sky-400/30 font-bold px-2 py-0.5 rounded">
+                      Edu
+                    </span>
+                  )}
                 </div>
 
                 {/* Badge zmiany — zielony dla realnych, stonowany dla konceptów */}
                 <span
                   className={`absolute top-3 right-3 z-30 font-mono text-xs px-2 py-1 rounded border backdrop-blur-sm ${
-                    isConcept
-                      ? "text-terminal-text bg-terminal-bg/80 border-terminal-border"
-                      : "text-bull bg-terminal-bg/80 border-bull/50 shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                    isEdu
+                      ? "text-sky-400 bg-terminal-bg/80 border-sky-400/50 shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                      : isConcept
+                        ? "text-terminal-text bg-terminal-bg/80 border-terminal-border"
+                        : "text-bull bg-terminal-bg/80 border-bull/50 shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
                   }`}
                 >
                   {tr(project.change.pl, project.change.en)}
@@ -504,9 +558,9 @@ export default function Projects() {
               <div className="relative flex flex-col gap-3 p-5 flex-1">
                 <div>
                   <h3
-                    className={`font-bold text-white transition-colors group-hover:text-bull ${
-                      project.flagship ? "font-display text-2xl" : "text-lg"
-                    }`}
+                    className={`font-bold text-white transition-colors ${
+                      isEdu ? "group-hover:text-sky-400" : "group-hover:text-bull"
+                    } ${project.flagship ? "font-display text-2xl" : "text-lg"}`}
                   >
                     {title}
                   </h3>
@@ -535,7 +589,9 @@ export default function Projects() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-widest text-terminal-text/50 group-hover:text-bull transition-colors pt-3 border-t border-terminal-border/50">
+                <div className={`flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-widest text-terminal-text/50 transition-colors pt-3 border-t border-terminal-border/50 ${
+                  isEdu ? "group-hover:text-sky-400" : "group-hover:text-bull"
+                }`}>
                   <span>
                     {project.images.length > 0
                       ? tr(

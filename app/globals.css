@@ -61,6 +61,29 @@ section[id] {
   background: #334155;
 }
 
+/* Cienki, dyskretny scrollbar w klimacie terminala — dla scrollowanych paneli
+   (modal projektu). Stonowana szarość na przezroczystym torze zamiast domyślnego
+   jasnego paska OS; leciutko jaśniejszy na hover. */
+.scrollbar-terminal {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.28) transparent; /* thumb | track (Firefox) */
+}
+.scrollbar-terminal::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-terminal::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0;
+}
+.scrollbar-terminal::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.22);
+  border-radius: 999px;
+}
+.scrollbar-terminal::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+}
+
 /* Background Grid Pattern */
 .bg-grid-pattern {
   background-size: 40px 40px;

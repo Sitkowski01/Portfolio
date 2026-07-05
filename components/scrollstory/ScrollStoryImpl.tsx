@@ -193,7 +193,7 @@ export default function ScrollStoryImpl() {
         ref={stickyRef}
         className="sticky top-0 h-screen overflow-hidden bg-terminal-bg"
       >
-        {/* ── Warstwa teł (grafiki 1–9 + wideo 10, crossfade) ─────────── */}
+        {/* ── Warstwa teł (grafiki 1–5 + wideo finału, crossfade) ─────── */}
         <div className="absolute inset-0" aria-hidden="true">
           {SCENES.map((s, i) =>
             s.media.kind === "video" ? (
@@ -332,13 +332,20 @@ export default function ScrollStoryImpl() {
           <span className="text-bull animate-bounce">▼</span>
         </div>
 
-        {/* ── Pomiń intro ─────────────────────────────────────────────── */}
-        <a
-          href="#hero"
-          className="absolute bottom-8 right-6 font-mono text-xs text-terminal-text uppercase tracking-widest border border-terminal-border rounded-md px-4 py-2 hover:text-terminal-highlight hover:border-terminal-text transition-colors bg-terminal-bg/60"
+        {/* ── Pomiń intro (lewy dół — prawy zajmuje chip „Terminal" Ctrl+K) ──
+            Skok natychmiastowy: html ma scroll-smooth, więc zwykła kotwica
+            przewijałaby płynnie przez całe 450vh scrollytellingu. */}
+        <button
+          type="button"
+          onClick={() =>
+            document
+              .getElementById("hero")
+              ?.scrollIntoView({ behavior: "instant" })
+          }
+          className="absolute bottom-8 left-6 z-40 font-mono text-xs text-terminal-text uppercase tracking-widest border border-terminal-border rounded-md px-4 py-2 hover:text-terminal-highlight hover:border-terminal-text transition-colors bg-terminal-bg/60 cursor-pointer"
         >
           {tr("Pomiń intro", "Skip intro")} ↓
-        </a>
+        </button>
       </div>
     </section>
   );

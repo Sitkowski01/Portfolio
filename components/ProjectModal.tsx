@@ -123,7 +123,13 @@ export default function ProjectModal({
           <span className="font-mono font-bold text-terminal-highlight">
             {project.ticker}
           </span>
-          <span className="font-mono text-bull text-xs bg-bull/10 px-2 py-0.5 rounded border border-bull/30">
+          <span
+            className={`font-mono text-xs px-2 py-0.5 rounded border ${
+              project.edu
+                ? "text-sky-400 bg-sky-400/10 border-sky-400/30"
+                : "text-bull bg-bull/10 border-bull/30"
+            }`}
+          >
             {tr(project.change.pl, project.change.en)}
           </span>
           <span className="hidden sm:inline font-mono text-xs text-terminal-text/60 uppercase tracking-wider">
@@ -138,7 +144,7 @@ export default function ProjectModal({
           </button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 p-5 sm:p-6 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
+        <div className="scrollbar-terminal flex flex-col lg:flex-row gap-5 lg:gap-6 p-5 sm:p-6 flex-1 min-h-0 overflow-y-auto lg:overflow-hidden">
           {/* Pokaz slajdów — w ramce „okna" dla efektu prezentacji */}
           <div className="flex flex-col gap-3 lg:w-[58%] lg:h-full lg:min-h-0">
             <div className="flex flex-col lg:flex-1 lg:min-h-0 rounded-xl overflow-hidden border border-terminal-border bg-terminal-panel shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]">
@@ -238,7 +244,7 @@ export default function ProjectModal({
 
           {/* Szczegóły — układ case study; przewija się tylko treść, przyciski zostają */}
           <div className="flex flex-col lg:w-[42%] lg:h-full lg:min-h-0">
-           <div className="flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2 [scrollbar-width:thin]">
+           <div className="scrollbar-terminal flex flex-col lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
             {/* Nagłówek: kicker + tytuł */}
             <span className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-bull/80 mb-2">
               {tr(project.category.pl, project.category.en)}
@@ -327,7 +333,6 @@ export default function ProjectModal({
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  download={project.demoUrl.endsWith(".pdf") ? "" : undefined}
                   className="bg-bull border border-bull text-[#030712] font-bold py-3 rounded transition-all hover:bg-[#00e68a] hover:shadow-neon-green-intense text-center"
                 >
                   {project.demoLabel

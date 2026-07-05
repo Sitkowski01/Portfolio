@@ -35,8 +35,8 @@ const COMMANDS: Command[] = [
   {
     keyword: "fundamentals",
     label: { pl: "Fundamenty / Metryki", en: "Fundamentals / Metrics" },
-    hint: "goto #fundamentals",
-    action: () => scrollTo("fundamentals"),
+    hint: "goto #profile",
+    action: () => scrollTo("profile"),
   },
   {
     keyword: "experience",
@@ -51,10 +51,10 @@ const COMMANDS: Command[] = [
     action: () => scrollTo("contact"),
   },
   {
-    keyword: "casestudy",
-    label: { pl: "Case Study / AI triage", en: "Case Study / AI triage" },
-    hint: "goto #case-study",
-    action: () => scrollTo("case-study"),
+    keyword: "magisterka",
+    label: { pl: "Praca magisterska / AI triage", en: "Master's thesis / AI triage" },
+    hint: "goto #holdings",
+    action: () => scrollTo("holdings"),
   },
   {
     keyword: "skills",
@@ -91,7 +91,15 @@ const COMMANDS: Command[] = [
     label: { pl: "Wyślij email", en: "Send email" },
     hint: "mailto",
     action: () => {
-      window.location.href = "mailto:mikolaj@mjgweb.pl";
+      window.location.href = "mailto:sitekmikolaj01@gmail.com";
+    },
+  },
+  {
+    keyword: "cv",
+    label: { pl: "Pobierz CV", en: "Download CV" },
+    hint: "open /cv.pdf",
+    action: () => {
+      window.open("/cv.pdf", "_blank");
     },
   },
   {

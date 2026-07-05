@@ -6,10 +6,10 @@ import HangingBadge from "./HangingBadge";
 import SectionHeader from "./SectionHeader";
 import { useLang, useTr } from "./i18n";
 
-type TabId = "whoami" | "strategy" | "now" | "edge";
+type TabId = "fundamentals" | "strategy" | "now" | "edge";
 
 const TABS: { id: TabId; file: string }[] = [
-  { id: "whoami", file: "whoami.txt" },
+  { id: "fundamentals", file: "fundamentals.json" },
   { id: "strategy", file: "strategy.md" },
   { id: "now", file: "now.md" },
   { id: "edge", file: "edge.md" },
@@ -17,59 +17,152 @@ const TABS: { id: TabId; file: string }[] = [
 
 const hl = "text-terminal-highlight";
 
-function WhoamiContent() {
-  const { lang } = useLang();
-  if (lang === "en") {
-    return (
-      <div className="flex flex-col gap-4">
-        <p>
-          <span className="text-bull">$</span>{" "}
-          <span className={hl}>cat whoami.txt</span>
-        </p>
-        <p className="text-terminal-highlight text-base sm:text-lg font-bold">
-          Mikołaj Sitek — web / fullstack developer
-        </p>
-        <p className="leading-relaxed">
-          I&apos;m someone who likes to combine <span className={hl}>technology</span>,{" "}
-          <span className={hl}>data</span> and <span className={hl}>strategic thinking</span>.
-          I don&apos;t like leaving things to chance — I&apos;d rather rely on systems and
-          data. I build apps from idea to production: web, mobile and AI integrations.
-        </p>
-        <p className="leading-relaxed">
-          <span className="text-terminal-text/50">main_catalysts:</span>{" "}
-          <span className="text-bull">Delivering from idea to production</span>
-          <span className="text-terminal-text/50"> · </span>
-          <span className="text-bull">Data-driven decisions</span>
-          <span className="text-terminal-text/50"> · </span>
-          <span className="text-bull">Continuous growth</span>
-        </p>
-      </div>
-    );
-  }
+// Podświetlanie składni dla „fundamentals.json" — render jak w edytorze kodu
+const jPunct = "text-terminal-text/40";
+const jKey = (name: string) => (
+  <span className="text-terminal-highlight">{`"${name}"`}</span>
+);
+const jStr = (v: string) => <span className="text-bull">{`"${v}"`}</span>;
+const jNum = (v: string | number) => <span className="text-sky-400">{v}</span>;
+
+// Kolumna klucza z wyrównaniem dwukropków (monospace → padding spacjami)
+function keyCol(name: string, width: number) {
+  const pad = " ".repeat(Math.max(1, width - (name.length + 3)));
   return (
-    <div className="flex flex-col gap-4">
-      <p>
-        <span className="text-bull">$</span>{" "}
-        <span className={hl}>cat whoami.txt</span>
-      </p>
-      <p className="text-terminal-highlight text-base sm:text-lg font-bold">
-        Mikołaj Sitek — web / fullstack developer
-      </p>
-      <p className="leading-relaxed">
-        Jestem osobą, która lubi łączyć <span className={hl}>technologię</span>,{" "}
-        <span className={hl}>dane</span> i <span className={hl}>strategiczne myślenie</span>.
-        Nie lubię polegać na przypadku — wolę opierać się na systemach i
-        danych. Buduję aplikacje od pomysłu po produkcję: web, mobile i
-        integracje AI.
-      </p>
-      <p className="leading-relaxed">
-        <span className="text-terminal-text/50">main_catalysts:</span>{" "}
-        <span className="text-bull">Dowożenie od pomysłu po produkcję</span>
-        <span className="text-terminal-text/50"> · </span>
-        <span className="text-bull">Decyzje oparte na danych</span>
-        <span className="text-terminal-text/50"> · </span>
-        <span className="text-bull">Ciągły rozwój</span>
-      </p>
+    <>
+      {jKey(name)}
+      <span className={jPunct}>{`:${pad}`}</span>
+    </>
+  );
+}
+
+function CodeLine({ n, children }: { n: number; children: React.ReactNode }) {
+  return (
+    <div className="flex">
+      <span className="select-none w-9 shrink-0 pl-1 pr-3 text-right text-terminal-text/25 tabular-nums border-r border-terminal-border/40">
+        {n}
+      </span>
+      <div className="whitespace-pre flex-1 pl-3">{children}</div>
+    </div>
+  );
+}
+
+function FundamentalsContent() {
+  const { lang } = useLang();
+  const t = (pl: string, en: string) => (lang === "en" ? en : pl);
+  const comment = (txt: string) => (
+    <span className={`${jPunct} italic`}>{`   // ${txt}`}</span>
+  );
+
+  return (
+    <div className="rounded-lg border border-terminal-border/70 bg-terminal-bg/40 py-2.5 pr-4 text-xs leading-[1.6] overflow-x-auto">
+      <CodeLine n={1}>
+        <span className={jPunct}>{"{"}</span>
+      </CodeLine>
+      <CodeLine n={2}>
+        {"  "}
+        {keyCol("developer", 16)}
+        {jStr("Mikołaj Sitek")}
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={3}>
+        {"  "}
+        {keyCol("years_coding", 16)}
+        {jNum(7)}
+        <span className={jPunct}>,</span>
+        {comment(t("od 2019", "since 2019"))}
+      </CodeLine>
+      <CodeLine n={4}>
+        {"  "}
+        {keyCol("focus", 16)}
+        <span className={jPunct}>[</span>
+        {jStr("web")}
+        <span className={jPunct}>, </span>
+        {jStr("mobile")}
+        <span className={jPunct}>, </span>
+        {jStr("AI")}
+        <span className={jPunct}>]</span>
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={5}>
+        {"  "}
+        {keyCol("projects", 16)}
+        {jNum(10)}
+        <span className={jPunct}>,</span>
+        {comment(t("6 zbudowanych", "6 shipped"))}
+      </CodeLine>
+      <CodeLine n={6}>
+        {"  "}
+        {keyCol("internships", 16)}
+        {jNum(2)}
+        <span className={jPunct}>,</span>
+        {comment("GlobalLogic · Raven")}
+      </CodeLine>
+      <CodeLine n={7}>
+        {"  "}
+        {keyCol("technologies", 16)}
+        {jStr("15+")}
+        <span className={jPunct}>,</span>
+        {comment(t("front · back · AI", "front · back · AI"))}
+      </CodeLine>
+      <CodeLine n={8}>
+        {"  "}
+        {keyCol("repositories", 16)}
+        {jStr("30+")}
+        <span className={jPunct}>,</span>
+        <span className={`${jPunct} italic`}>
+          {"   // "}
+          <a
+            href="https://github.com/sitkowski01"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="not-italic hover:text-bull transition-colors"
+          >
+            @sitkowski01 ↗
+          </a>
+        </span>
+      </CodeLine>
+      <CodeLine n={9}>
+        {"  "}
+        {jKey("journey")}
+        <span className={jPunct}>: {"{"}</span>
+      </CodeLine>
+      <CodeLine n={10}>
+        {"    "}
+        {keyCol("2019", 8)}
+        {jStr(t("Start kodowania", "Started coding"))}
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={11}>
+        {"    "}
+        {keyCol("2023", 8)}
+        {jStr(t("Staż — Raven IT", "Internship — Raven IT"))}
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={12}>
+        {"    "}
+        {keyCol("2024", 8)}
+        {jStr(t("Staż — GlobalLogic", "Internship — GlobalLogic"))}
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={13}>
+        {"    "}
+        {keyCol("2025", 8)}
+        {jStr(t("Dyplom magistra — ZUT", "Master's degree — ZUT"))}
+        <span className={jPunct}>,</span>
+      </CodeLine>
+      <CodeLine n={14}>
+        {"    "}
+        {keyCol("now", 8)}
+        {jStr(t("Specjalista IT @ Leroy Merlin", "IT Specialist @ Leroy Merlin"))}
+      </CodeLine>
+      <CodeLine n={15}>
+        {"  "}
+        <span className={jPunct}>{"}"}</span>
+      </CodeLine>
+      <CodeLine n={16}>
+        <span className={jPunct}>{"}"}</span>
+      </CodeLine>
     </div>
   );
 }
@@ -213,8 +306,8 @@ function EdgeContent() {
       <div className="flex flex-col gap-4">
         <p className="text-bull font-bold text-base sm:text-lg"># What sets me apart</p>
         <p className="leading-relaxed">
-          I don&apos;t stop at the visual layer — I deliver a product from idea,
-          through code, to a working version in production.
+          I don&apos;t stop at the visual layer — I take responsibility for the
+          whole product, until it runs in production.
         </p>
         <ul className="flex flex-col gap-2 leading-relaxed">
           <li>
@@ -245,8 +338,8 @@ function EdgeContent() {
     <div className="flex flex-col gap-4">
       <p className="text-bull font-bold text-base sm:text-lg"># Co mnie wyróżnia</p>
       <p className="leading-relaxed">
-        Nie zatrzymuję się na warstwie wizualnej — dowożę produkt od pomysłu,
-        przez kod, po działającą wersję na produkcji.
+        Nie zatrzymuję się na warstwie wizualnej — biorę odpowiedzialność za
+        cały produkt, aż działa na produkcji.
       </p>
       <ul className="flex flex-col gap-2 leading-relaxed">
         <li>
@@ -275,14 +368,14 @@ function EdgeContent() {
 }
 
 const TAB_CONTENT: Record<TabId, React.ReactNode> = {
-  whoami: <WhoamiContent />,
+  fundamentals: <FundamentalsContent />,
   strategy: <StrategyContent />,
   now: <NowContent />,
   edge: <EdgeContent />,
 };
 
 export default function Profile() {
-  const [tab, setTab] = useState<TabId>("whoami");
+  const [tab, setTab] = useState<TabId>("fundamentals");
   const reduce = useReducedMotion();
   const tr = useTr();
 

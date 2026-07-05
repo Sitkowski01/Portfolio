@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 // Formularz kontaktowy → wysyłka przez SMTP skrzynki (Hostline) na CONTACT_TO.
 // Konfiguracja w .env.local (i w panelu hostingu/Vercel):
 //   SMTP_HOST=mail.mjgweb.pl  SMTP_PORT=465  SMTP_USER=mikolaj@mjgweb.pl
-//   SMTP_PASS=<hasło skrzynki>  CONTACT_TO=mikolaj@mjgweb.pl
+//   SMTP_PASS=<hasło skrzynki>  CONTACT_TO=sitekmikolaj01@gmail.com
 
 export const runtime = "nodejs";
 
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   const port = Number(process.env.SMTP_PORT || 465);
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  const to = process.env.CONTACT_TO || "mikolaj@mjgweb.pl";
+  const to = process.env.CONTACT_TO || "sitekmikolaj01@gmail.com";
 
   if (!user || !pass) {
     console.error("Brak SMTP_USER / SMTP_PASS w env.");
