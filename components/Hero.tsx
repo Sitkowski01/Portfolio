@@ -27,7 +27,7 @@ export default function Hero() {
           >
             <span className="text-gradient-light">Mikołaj Sitek</span>
             <span className="block text-3xl sm:text-4xl md:text-5xl text-terminal-text mt-2 font-medium">
-              Web / Fullstack developer
+              Fullstack Developer — Web & Mobile
             </span>
           </h1>
 
@@ -53,7 +53,6 @@ export default function Hero() {
             >
               <MailIcon className="w-4 h-4" /> {tr("Kontakt", "Contact")}
             </a>
-            {/* TODO: wrzuć plik public/cv.pdf */}
             <a
               href="/cv.pdf"
               download

@@ -4,20 +4,20 @@
 // tekstu (lewa strona) + ewentualny avatar 3D + typ przejścia.
 //
 // TŁO (`media`):
-//   - sceny 1–9: statyczna grafika (postać wkomponowana w obraz),
-//   - scena 10:  wideo (finał) + avatar 3D na wierzchu.
+//   - sceny 1–5: statyczna grafika (postać wkomponowana w obraz),
+//   - scena 6:   wideo (finał) + avatar 3D na wierzchu.
 //
 // AVATAR 3D (`avatar`) — TYLKO tam, gdzie postaci NIE ma już w grafice
-// (czyli scena 10). Gdzie `avatar` jest pominięty, model 3D jest ukryty.
+// (czyli scena 6). Gdzie `avatar` jest pominięty, model 3D jest ukryty.
 //   `position`  — {x,y,z} w świecie (x>0 = prawa, y=0 = stopy na podłodze).
 //   `scale`     — wysokość świata avatara.
 //   `rotationY` — obrót (ujemny = lekko 3/4 ku widzowi/lewej).
-// Klip chodu „Walking" gra w miejscu, tempo napędza scroll (AvatarController).
+// Klip avatara gra w miejscu, w nieskończonej pętli (AvatarController).
 //
 // `transition: "portal"` zapala krótki rozbłysk (obrony / rdzeń portfolio).
 // ─────────────────────────────────────────────────────────────────────────
 
-export type ClipName = "Walking";
+export type ClipName = "Big_Wave_Hello";
 
 export type Loc = { pl: string; en: string };
 
@@ -47,13 +47,13 @@ export type Scene = {
   media: SceneMedia;
   captions: CaptionData[];
   transition?: "soft" | "portal";
-  /** Obecny tylko tam, gdzie pokazujemy model 3D (scena 10). */
+  /** Obecny tylko tam, gdzie pokazujemy model 3D (scena 6). */
   avatar?: AvatarConfig;
 };
 
 export const MODEL_URL = "/avatar/avatar-story.glb";
-/** Jedyny klip — chód, grany w miejscu i napędzany scrollem. */
-export const WALK_CLIP: ClipName = "Walking";
+/** Jedyny klip w modelu — grany w zwykłej pętli (bez sprzężenia ze scrollem). */
+export const AVATAR_CLIP: ClipName = "Big_Wave_Hello";
 /** Pozycja startowa modelu (zanim damp dojdzie do sceny z avatarem). */
 export const AVATAR_HOME = { x: 2.4, y: 0, z: 0.5 };
 
@@ -66,7 +66,7 @@ const vid = (id: number): SceneMedia => ({
   src: `/story/scenes/Scena_${id}.mp4`,
 });
 
-// Osadzenie avatara 3D (tylko scena 10). x większy = bardziej w prawo.
+// Osadzenie avatara 3D (tylko scena 6). x większy = bardziej w prawo.
 const A = (
   x = 2.4,
   scale = 2.0,
@@ -91,7 +91,7 @@ export const SCENES: Scene[] = [
   {
     id: 2,
     label: { pl: "02 / Raven IT", en: "02 / Raven IT" },
-    media: img(4),
+    media: img(2),
     captions: [
       {
         title: { pl: "Pierwsze praktyki zmieniły perspektywę.", en: "My first internship changed my perspective." },
@@ -102,7 +102,7 @@ export const SCENES: Scene[] = [
   {
     id: 3,
     label: { pl: "03 / GlobalLogic", en: "03 / GlobalLogic" },
-    media: img(6),
+    media: img(3),
     captions: [
       {
         title: { pl: "Staż pokazał mi większy świat IT.", en: "The internship showed me a bigger IT world." },
@@ -113,7 +113,7 @@ export const SCENES: Scene[] = [
   {
     id: 4,
     label: { pl: "04 / Obrona magisterki", en: "04 / Master's defense" },
-    media: img(8),
+    media: img(4),
     transition: "portal",
     captions: [
       {
@@ -125,33 +125,25 @@ export const SCENES: Scene[] = [
   {
     id: 5,
     label: { pl: "05 / Leroy · rutyna", en: "05 / Leroy · routine" },
-    media: img(9),
+    media: img(5),
     captions: [
       {
         title: { pl: "Potem przyszła praca, która nie była zła.", en: "Then came a job that wasn't bad." },
-        body: { pl: "Ale z czasem coraz mocniej czułem, że to nie jest kierunek, którego szukałem przez lata.", en: "But over time I felt more and more that it wasn't the direction I'd been searching for over the years." },
-      },
-      {
-        title: { pl: "Najtrudniejsza była rutyna.", en: "The hardest part was the routine." },
-        body: { pl: "Powtarzalność dni i poczucie, że oddalam się od tego, co naprawdę chciałem robić.", en: "The sameness of the days and the feeling that I was drifting from what I really wanted to do." },
+        body: { pl: "Ale rutyna dnia za dniem przypominała mi, że to jeszcze nie jest kierunek, którego szukałem przez te wszystkie lata.", en: "But the day-after-day routine kept reminding me this still wasn't the direction I'd been searching for all those years." },
       },
     ],
   },
   {
     id: 6,
     label: { pl: "06 / Portfolio", en: "06 / Portfolio" },
-    media: vid(10),
+    media: vid(6),
     transition: "portal",
     avatar: A(),
     captions: [
       {
-        title: { pl: "Dlatego powstało to portfolio.", en: "That's why this portfolio exists." },
-        body: { pl: "Nie jako ozdoba. Jako próba nazwania kierunku, którego szukałem przez lata.", en: "Not as decoration. As an attempt to name the direction I'd searched for over the years." },
-      },
-      {
-        title: { pl: "Wolę budować, niż czekać.", en: "I'd rather build than wait." },
-        body: { pl: "Web, mobile i AI — od pierwszego szkicu po wdrożenie.", en: "Web, mobile and AI — from the first sketch to deployment." },
-        cta: { pl: "ENTER PORTFOLIO", en: "ENTER PORTFOLIO" },
+        title: { pl: "Ten kierunek musiałem zbudować sobie sam.", en: "This direction was one I had to build myself." },
+        body: { pl: "Tak powstało to portfolio — moje aplikacje, moje pomysły, mój kod. Zobacz, co potrafię.", en: "That's how this portfolio came to be — my apps, my ideas, my code. See what I can do." },
+        cta: { pl: "WEJDŹ DO PORTFOLIO", en: "ENTER PORTFOLIO" },
       },
     ],
   },

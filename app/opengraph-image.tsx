@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // Obraz podglądu linku (LinkedIn / Twitter / Discord) generowany w buildzie
-export const alt = "Mikołaj Sitek — Web & Mobile Developer";
+export const alt = "Mikołaj Sitek — Fullstack Developer (Web & Mobile)";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -60,7 +60,7 @@ export default function Image() {
               color: "#10b981",
             }}
           >
-            Web &amp; Mobile Developer
+            Fullstack Developer — Web &amp; Mobile
           </div>
           <div
             style={{
@@ -71,7 +71,7 @@ export default function Image() {
               maxWidth: 900,
             }}
           >
-            React Native · dane · integracje AI — od pomysłu po publikację.
+            React · React Native · Node · AI — kod, który trafia do użytkowników.
           </div>
         </div>
 
@@ -85,10 +85,10 @@ export default function Image() {
             letterSpacing: 2,
           }}
         >
-          <div style={{ display: "flex" }}>▲ $REACT_NATIVE</div>
-          <div style={{ display: "flex" }}>▲ $TYPESCRIPT</div>
-          <div style={{ display: "flex" }}>▲ $NEXTJS</div>
-          <div style={{ display: "flex" }}>▲ $AI</div>
+          <div style={{ display: "flex" }}>+ $REACT_NATIVE</div>
+          <div style={{ display: "flex" }}>+ $TYPESCRIPT</div>
+          <div style={{ display: "flex" }}>+ $NEXTJS</div>
+          <div style={{ display: "flex" }}>+ $AI</div>
         </div>
       </div>
     ),

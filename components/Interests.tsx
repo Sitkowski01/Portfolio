@@ -35,9 +35,9 @@ const HOBBIES: Hobby[] = [
     image: "/hobbies/apki.webp",
     title: { pl: "Tworzenie aplikacji", en: "Building apps" },
     tag: { pl: "Po godzinach", en: "After hours" },
-    essence: { pl: "Od pomysłu do działającego produktu.", en: "From idea to a working product." },
+    essence: { pl: "Mój poligon doświadczalny na nowe technologie.", en: "My proving ground for new tech." },
     since: { pl: "Od dziecka ciekawiło mnie, jak powstają systemy.", en: "Since childhood I've been curious how systems are made." },
-    what: { pl: "Własne apki web i mobile budowane od zera.", en: "My own web and mobile apps built from scratch." },
+    what: { pl: "Prototypy i side-projecty — na nich testuję nowe API i frameworki.", en: "Prototypes and side projects — where I test new APIs and frameworks." },
     why: { pl: "Uwielbiam patrzeć, jak idea ożywa w kodzie.", en: "I love watching an idea come alive in code." },
   },
   {
@@ -57,7 +57,7 @@ const HOBBIES: Hobby[] = [
     tag: { pl: "Kim jestem", en: "Who I am" },
     essence: { pl: "Logika, dane i sport w jednym.", en: "Logic, data and sport in one." },
     since: { pl: "Od liceum łączę programowanie z analizą i sportem.", en: "Since high school I've mixed programming with analysis and sport." },
-    what: { pl: "Buduję aplikacje web i mobile — od pomysłu po wdrożenie.", en: "I build web and mobile apps — from idea to deployment." },
+    what: { pl: "Łączę web, mobile i dane — zawodowo i po godzinach.", en: "I mix web, mobile and data — at work and after hours." },
     why: { pl: "Lubię rozumieć, jak coś działa, i robić to lepiej.", en: "I like understanding how things work — and doing them better." },
   },
   {
@@ -153,10 +153,10 @@ function CardFaces({
       <div className="hobby-face hobby-back glass-panel flex flex-col p-4 text-left">
         {/* górny ticker-meta */}
         <div className="flex items-center justify-between mb-2">
-          <span className="font-mono text-[0.5rem] uppercase tracking-[0.22em] text-bull/70">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-bull/70">
             {tr(h.tag.pl, h.tag.en)}
           </span>
-          <span className="font-mono text-[0.5rem] text-terminal-text/40 tracking-wider">
+          <span className="font-mono text-[0.6rem] text-terminal-text/40 tracking-wider">
             {num} / {String(HOBBIES.length).padStart(2, "0")}
           </span>
         </div>
@@ -175,7 +175,7 @@ function CardFaces({
         <dl className="flex flex-col gap-2 mt-auto">
           {facets.map(([label, value]) => (
             <div key={label} className="border-t border-terminal-border/40 pt-1.5">
-              <dt className="font-mono text-[0.5rem] uppercase tracking-[0.18em] text-bull/60 mb-0.5">
+              <dt className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-bull/60 mb-0.5">
                 {label}
               </dt>
               <dd className="text-terminal-highlight/80 text-[0.72rem] leading-snug">

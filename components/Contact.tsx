@@ -51,8 +51,8 @@ export default function Contact() {
               </h2>
               <p className="text-lg text-terminal-text mb-8 leading-relaxed">
                 {tr(
-                  "Szukam miejsca, gdzie połączę frontend, myślenie produktowe i dane — tam, gdzie kod realnie trafia do użytkowników. Masz projekt, ofertę pracy albo chcesz pogadać o giełdzie i danych?",
-                  "I'm looking for a place to combine frontend, product thinking and data — where code actually reaches users. Got a project, a job offer, or just want to talk markets and data?"
+                  "Szukam miejsca, gdzie połączę fullstack development, myślenie produktowe i dane — tam, gdzie kod realnie trafia do użytkowników. Masz projekt, ofertę pracy albo chcesz pogadać o giełdzie i danych?",
+                  "I'm looking for a place to combine fullstack development, product thinking and data — where code actually reaches users. Got a project, a job offer, or just want to talk markets and data?"
                 )}
                 <span className="text-white font-medium block mt-2">
                   Let&apos;s connect.
@@ -63,7 +63,7 @@ export default function Contact() {
                 <ContactFormModal />
                 <a
                   href={LINKEDIN_URL}
-                  target={LINKEDIN_URL === "#" ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-terminal-bg text-terminal-highlight border border-terminal-border rounded hover:border-terminal-highlight hover:bg-terminal-panel hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
@@ -71,13 +71,12 @@ export default function Contact() {
                 </a>
                 <a
                   href={GITHUB_URL}
-                  target={GITHUB_URL === "#" ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-terminal-bg text-terminal-highlight border border-terminal-border rounded hover:border-terminal-highlight hover:bg-terminal-panel hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
                   <GithubIcon className="w-5 h-5" /> GitHub
                 </a>
-                {/* TODO: wrzuć plik public/cv.pdf */}
                 <a
                   href="/cv.pdf"
                   download
