@@ -69,7 +69,7 @@ const vid = (id: number): SceneMedia => ({
 // Osadzenie avatara 3D (tylko scena 6). x większy = bardziej w prawo.
 const A = (
   x = 2.4,
-  scale = 2.0,
+  scale = 3.0,
   rotationY = -0.5,
   z = 0.5,
   y = 0
