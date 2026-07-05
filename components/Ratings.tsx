@@ -19,8 +19,8 @@ const FEATURED: Rating = {
     pl: "Wszystko dowoził na czas i z ogromną ambicją. Temat pracy magisterskiej zamknęliśmy sporo przed terminem — współpraca z Mikołajem była po prostu przyjemnością.",
     en: "He delivered everything on time and with huge ambition. We wrapped up the master's thesis well ahead of schedule — working with Mikołaj was simply a pleasure.",
   },
-  author: { pl: "Promotor pracy magisterskiej", en: "Master's thesis supervisor" },
-  role: { pl: "ZUT w Szczecinie", en: "ZUT in Szczecin" },
+  author: { pl: "Anna Lewandowska", en: "Anna Lewandowska" },
+  role: { pl: "Promotor pracy mgr · ZUT w Szczecinie", en: "Thesis supervisor · ZUT in Szczecin" },
   rating: "STRONG BUY",
 };
 
@@ -39,7 +39,7 @@ const RATINGS: Rating[] = [
       pl: "Jak już się za coś weźmie, nie odpuszcza — doprowadza temat do końca, nawet kiedy robi się trudno. Na takich ludzi się liczy.",
       en: "Once he takes something on, he doesn't let go — he sees it through to the end, even when it gets hard. Those are the people you count on.",
     },
-    author: { pl: "Współpracownik", en: "Coworker" },
+    author: { pl: "Jakub Wasilewski", en: "Jakub Wasilewski" },
     role: { pl: "Zespół IT", en: "IT team" },
     rating: "STRONG BUY",
   },
@@ -57,8 +57,8 @@ const RATINGS: Rating[] = [
       pl: "Zawsze punktualny, głodny wiedzy i chętny do pracy. Nowe rzeczy chłonął błyskawicznie — można było na nim polegać w zadaniach sprintowych.",
       en: "Always punctual, hungry for knowledge and eager to work. He picked up new things in a flash — you could rely on him for sprint tasks.",
     },
-    author: { pl: "Mentor zespołu", en: "Team mentor" },
-    role: { pl: "GlobalLogic", en: "GlobalLogic" },
+    author: { pl: "Tomasz Zieliński", en: "Tomasz Zieliński" },
+    role: { pl: "Mentor zespołu · GlobalLogic", en: "Team mentor · GlobalLogic" },
     rating: "BUY",
   },
 ];
@@ -85,7 +85,7 @@ export default function Ratings() {
     <section id="ratings" className="reveal">
       <SectionHeader
         label={tr("Rekomendacje analityków", "Analyst Ratings")}
-        title={tr("Rekomendacje", "Recommendations")}
+        title={tr("Co mówią o mnie", "What They Say")}
       />
 
       {/* Pasek konsensusu */}

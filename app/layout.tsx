@@ -26,9 +26,9 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Mikołaj Sitek — Web & Mobile Developer",
+  title: "Mikołaj Sitek — Fullstack Developer (Web & Mobile)",
   description:
-    "Data-driven web & mobile developer. Buduję aplikacje webowe i mobilne z myśleniem analitycznym — React Native, dane i integracje AI.",
+    "Fullstack developer — web & mobile. Buduję aplikacje webowe i mobilne z myśleniem analitycznym — React Native, dane i integracje AI.",
   keywords: [
     "Mikołaj Sitek",
     "web developer",
@@ -46,13 +46,13 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     url: SITE_URL,
     siteName: "Mikołaj Sitek — MSX Terminal",
-    title: "Mikołaj Sitek — Web & Mobile Developer",
+    title: "Mikołaj Sitek — Fullstack Developer (Web & Mobile)",
     description:
       "Buduję aplikacje webowe i mobilne z myśleniem analitycznym. React Native, dane, integracje AI.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mikołaj Sitek — Web & Mobile Developer",
+    title: "Mikołaj Sitek — Fullstack Developer (Web & Mobile)",
     description:
       "Buduję aplikacje webowe i mobilne z myśleniem analitycznym. React Native, dane, integracje AI.",
   },

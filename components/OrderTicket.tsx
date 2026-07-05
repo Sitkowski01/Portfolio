@@ -8,7 +8,7 @@ const TICKET = {
   asset: "$MIKOLAJ",
   side: "BUY",
   rows: [
-    { k: { pl: "Rola", en: "Role" }, v: { pl: "Web / Fullstack Developer", en: "Web / Fullstack Developer" } },
+    { k: { pl: "Rola", en: "Role" }, v: { pl: "Fullstack Developer — Web & Mobile", en: "Fullstack Developer — Web & Mobile" } },
     { k: { pl: "Stack", en: "Stack" }, v: { pl: "React · Angular · Next.js · Node · TS", en: "React · Angular · Next.js · Node · TS" } },
     { k: { pl: "Tryb", en: "Mode" }, v: { pl: "Zdalnie / Hybryda / Szczecin", en: "Remote / Hybrid / Szczecin" } },
     { k: { pl: "Typ", en: "Type" }, v: { pl: "Etat · B2B · Kontrakt", en: "Full-time · B2B · Contract" } },

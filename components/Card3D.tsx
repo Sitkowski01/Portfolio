@@ -99,7 +99,7 @@ export default function Card3D() {
               </h2>
               <div className="text-sm text-terminal-text mb-4 font-mono flex items-center">
                 <span className="inline-block w-2 h-2 bg-bull rounded-full mr-2 animate-pulse"></span>
-                Web & Mobile Developer
+                Fullstack Developer — Web & Mobile
               </div>
 
               {/* Traits as Stock Tickers */}
