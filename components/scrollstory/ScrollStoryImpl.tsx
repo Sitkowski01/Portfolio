@@ -289,7 +289,7 @@ export default function ScrollStoryImpl() {
               captionRefs.current[i] = el;
             }}
             style={{ opacity: 0, visibility: "hidden" }}
-            className="absolute left-4 sm:left-12 lg:left-24 top-1/2 -translate-y-1/2 max-w-md px-6 pointer-events-none will-change-transform"
+            className="absolute left-4 right-4 sm:right-auto sm:left-12 lg:left-24 top-1/2 -translate-y-1/2 max-w-md px-6 pointer-events-none will-change-transform"
           >
             <div className="webgl-text-mask" />
             <div className="font-mono text-bull text-xs uppercase tracking-widest mb-3">

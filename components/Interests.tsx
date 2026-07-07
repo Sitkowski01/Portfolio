@@ -94,6 +94,13 @@ const HOBBIES: Hobby[] = [
 
 const MID = (HOBBIES.length - 1) / 2;
 
+// Kolejność w siatce (mobile/tablet): karty czyta się po kolei, więc
+// „ja" (w wachlarzu środek talii) otwiera listę, reszta bez zmian.
+const HOBBIES_GRID: Hobby[] = [
+  HOBBIES[MID],
+  ...HOBBIES.filter((_, i) => i !== MID),
+];
+
 function CardFaces({
   h,
   i,
@@ -196,7 +203,21 @@ export default function Interests() {
   const toggle = (id: string) =>
     setFlipped((p) => ({ ...p, [id]: !p[id] }));
 
+  // Wachlarz tylko na desktopie — na telefonie/tablecie karty nachodziły na
+  // tekst i wystawały poza ekran; tam pokazujemy statyczną siatkę (flip tapem).
+  // Start = false (zgodny z SSR), efekt podnosi na desktopie po mount.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  const useFan = !reduce && isDesktop;
+
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const innerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -204,12 +225,27 @@ export default function Interests() {
   const flippedRef = useRef(flipped);
   flippedRef.current = flipped;
 
-  // Scroll-driven spread (tylko gdy ruch dozwolony)
+  // Scroll-driven spread (tylko wariant wachlarza)
   useEffect(() => {
-    if (reduce) return;
+    if (!useFan) return;
     const section = sectionRef.current;
     const deck = deckRef.current;
     if (!section || !deck) return;
+
+    // Scena kart zaczyna się POD nagłówkiem (mierzonym), a rozmiar karty
+    // skaluje się do wolnej wysokości — karty nie najeżdżają na tekst
+    // na niższych ekranach (laptopy).
+    const measure = () => {
+      const headerH = headerRef.current?.offsetHeight ?? 240;
+      deck.style.top = `${headerH}px`;
+      // 56px = bottom-14 decka (strefa podpisu); 0.52: wysokość karty (4/3 w)
+      // + opadanie skrajnych kart w łuku + uniesienie aktywnej mieszczą się
+      // w dostępnej wysokości.
+      const availH = window.innerHeight - headerH - 56;
+      const cardW = Math.max(150, Math.min(285, Math.round(availH * 0.52)));
+      deck.style.setProperty("--hobby-card-w", `${cardW}px`);
+    };
+    measure();
 
     let raf = 0;
     let visible = false;
@@ -244,8 +280,7 @@ export default function Interests() {
         const a = activeness[i];
 
         const x = off * spacingX * progress;
-        // +28: cała talia nieco niżej (pod nagłówkiem), na środku ekranu
-        const y = Math.abs(off) * arcY * progress - a * 26 + 28 * progress;
+        const y = Math.abs(off) * arcY * progress - a * 26;
         const rot = off * 7 * progress * (1 - a);
         const scale = 1 + a * 0.12;
 
@@ -268,18 +303,22 @@ export default function Interests() {
     );
     io.observe(section);
 
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     onScroll();
     loop();
 
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [reduce]);
+  }, [useFan]);
 
   const intro = (
     <p className="text-terminal-text max-w-2xl mb-2 leading-relaxed">
@@ -288,105 +327,113 @@ export default function Interests() {
         "Beyond the terminal I have a few passions that drive how I think and work."
       )}{" "}
       <span className="text-bull">
-        {reduce
-          ? tr("Najedź na kartę (lub dotknij), aby ją odwrócić.", "Hover a card (or tap) to flip it.")
-          : tr(
+        {useFan
+          ? tr(
               "Przewijaj w dół, aby rozsunąć talię — najedź na kartę, aby ją odwrócić.",
               "Scroll down to fan out the deck — hover a card to flip it."
-            )}
+            )
+          : tr("Dotknij karty (lub najedź), aby ją odwrócić.", "Tap a card (or hover) to flip it.")}
       </span>
     </p>
   );
 
-  // Wariant reduced-motion: statyczna siatka, flip CSS-em
-  if (reduce) {
-    return (
-      <section id="interests" className="reveal">
-        <SectionHeader
-          label={tr("Indeks osobisty", "Personal Index")}
-          title={tr("Zainteresowania", "Interests")}
-        />
-        {intro}
-        <div className="hobby-deck flex flex-wrap items-center justify-center gap-6 py-6">
-          {HOBBIES.map((h, i) => (
-            <button
-              key={h.id}
-              type="button"
-              onClick={() => toggle(h.id)}
-              aria-pressed={!!flipped[h.id]}
-              aria-label={tr(`${h.title.pl} — pokaż opis`, `${h.title.en} — show details`)}
-              className={`hobby-card ${flipped[h.id] ? "is-flipped" : ""}`}
-            >
-              <CardFaces h={h} i={i} cssFlip />
-            </button>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  // Wariant scrollowy: sticky stage + rozsuwanie sterowane scrollem
+  // Jedna wspólna <section> dla obu wariantów — ScrollReveal obserwuje element
+  // tylko raz przy mount, więc nie wolno go odtwarzać przy przełączeniu układu.
   return (
     <section id="interests" ref={sectionRef} className="reveal">
-      {/* Pełnoekranowa scena (body ma overflow-x-hidden) — więcej miejsca = mniejszy ścisk */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2 min-h-[260vh]">
-        <div className="sticky top-0 h-screen overflow-hidden">
-          <div className="absolute inset-x-0 top-0 z-40 pt-14 lg:pt-16 pointer-events-none">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-              <SectionHeader
-                label={tr("Indeks osobisty", "Personal Index")}
-                title={tr("Zainteresowania", "Interests")}
-              />
-              {intro}
+      {useFan ? (
+        /* Wariant desktopowy: sticky stage + rozsuwanie sterowane scrollem.
+           Pełnoekranowa scena (body ma overflow-x-hidden). */
+        <div className="w-screen relative left-1/2 -translate-x-1/2 min-h-[260vh]">
+          <div className="sticky top-0 h-screen overflow-hidden">
+            <div
+              ref={headerRef}
+              className="absolute inset-x-0 top-0 z-40 pt-14 lg:pt-16 pointer-events-none"
+            >
+              <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+                <SectionHeader
+                  label={tr("Indeks osobisty", "Personal Index")}
+                  title={tr("Zainteresowania", "Interests")}
+                />
+                {intro}
+              </div>
+            </div>
+
+            {/* top ustawia JS (measure) — talia zaczyna się pod nagłówkiem */}
+            <div
+              ref={deckRef}
+              style={{ top: 240 }}
+              className="hobby-deck absolute inset-x-0 bottom-14"
+            >
+              {HOBBIES.map((h, i) => (
+                <button
+                  key={h.id}
+                  type="button"
+                  ref={(el) => {
+                    cardRefs.current[i] = el;
+                  }}
+                  onClick={() => toggle(h.id)}
+                  onMouseEnter={() => (hoverRef.current = i)}
+                  onMouseLeave={() => {
+                    if (hoverRef.current === i) hoverRef.current = null;
+                  }}
+                  onFocus={() => (hoverRef.current = i)}
+                  onBlur={() => {
+                    if (hoverRef.current === i) hoverRef.current = null;
+                  }}
+                  aria-pressed={!!flipped[h.id]}
+                  aria-label={tr(`${h.title.pl} — pokaż opis`, `${h.title.en} — show details`)}
+                  className={`hobby-card hobby-card--abs ${
+                    flipped[h.id] ? "is-flipped" : ""
+                  }`}
+                  style={{ zIndex: Math.round(50 - Math.abs(i - MID) * 6) }}
+                >
+                  <CardFaces
+                    h={h}
+                    i={i}
+                    innerRef={(el) => {
+                      innerRefs.current[i] = el;
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+
+            {/* Podpis wypełniający dół sceny — spina hobby w jedną myśl */}
+            <div className="absolute inset-x-0 bottom-10 z-30 px-6 text-center pointer-events-none">
+              <div className="font-mono text-[0.7rem] sm:text-xs uppercase tracking-[0.25em] text-terminal-text/45">
+                {tr("Wspólny mianownik —", "Common denominator —")}{" "}
+                <span className="text-bull/70">
+                  {tr("decyzje · analiza · timing · rozwój", "decisions · analysis · timing · growth")}
+                </span>
+              </div>
             </div>
           </div>
-
-          <div ref={deckRef} className="hobby-deck absolute inset-0 w-full">
-            {HOBBIES.map((h, i) => (
+        </div>
+      ) : (
+        /* Wariant mobile/tablet + reduced-motion: statyczna siatka, flip CSS-em */
+        <>
+          <SectionHeader
+            label={tr("Indeks osobisty", "Personal Index")}
+            title={tr("Zainteresowania", "Interests")}
+          />
+          {intro}
+          <div className="hobby-deck flex flex-wrap items-center justify-center gap-5 sm:gap-6 py-6">
+            {HOBBIES_GRID.map((h, i) => (
               <button
                 key={h.id}
                 type="button"
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
                 onClick={() => toggle(h.id)}
-                onMouseEnter={() => (hoverRef.current = i)}
-                onMouseLeave={() => {
-                  if (hoverRef.current === i) hoverRef.current = null;
-                }}
-                onFocus={() => (hoverRef.current = i)}
-                onBlur={() => {
-                  if (hoverRef.current === i) hoverRef.current = null;
-                }}
                 aria-pressed={!!flipped[h.id]}
                 aria-label={tr(`${h.title.pl} — pokaż opis`, `${h.title.en} — show details`)}
-                className={`hobby-card hobby-card--abs ${
-                  flipped[h.id] ? "is-flipped" : ""
-                }`}
-                style={{ zIndex: Math.round(50 - Math.abs(i - MID) * 6) }}
+                className={`hobby-card ${flipped[h.id] ? "is-flipped" : ""}`}
               >
-                <CardFaces
-                  h={h}
-                  i={i}
-                  innerRef={(el) => {
-                    innerRefs.current[i] = el;
-                  }}
-                />
+                <CardFaces h={h} i={i} cssFlip />
               </button>
             ))}
           </div>
-
-          {/* Podpis wypełniający dół sceny — spina hobby w jedną myśl */}
-          <div className="absolute inset-x-0 bottom-10 z-30 px-6 text-center pointer-events-none">
-            <div className="font-mono text-[0.7rem] sm:text-xs uppercase tracking-[0.25em] text-terminal-text/45">
-              {tr("Wspólny mianownik —", "Common denominator —")}{" "}
-              <span className="text-bull/70">
-                {tr("decyzje · analiza · timing · rozwój", "decisions · analysis · timing · growth")}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </section>
   );
 }
