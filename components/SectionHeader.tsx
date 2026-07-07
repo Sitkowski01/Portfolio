@@ -14,7 +14,7 @@ export default function SectionHeader({
         ></span>
         {label}
       </div>
-      <h2 className="font-display text-3xl md:text-4xl font-bold text-terminal-highlight uppercase tracking-tight flex items-center gap-4">
+      <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-terminal-highlight uppercase tracking-tight flex items-center gap-4">
         {title}
         <span className="h-px flex-grow bg-gradient-to-r from-bull/40 via-terminal-border to-transparent"></span>
       </h2>

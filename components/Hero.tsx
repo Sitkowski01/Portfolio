@@ -31,7 +31,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-terminal-text max-w-2xl leading-relaxed mt-4">
+          <p className="text-base sm:text-lg md:text-xl text-terminal-text max-w-2xl leading-relaxed mt-4">
             {tr(
               "Buduję aplikacje webowe i mobilne z myśleniem analitycznym. Łączę React Native, dane i integracje AI, dostarczając rozwiązania, które mają znaczenie biznesowe — od pomysłu po publikację w sklepie.",
               "I build web and mobile apps with an analytical mindset. I combine React Native, data and AI integrations to deliver solutions with real business impact — from idea to store release."
