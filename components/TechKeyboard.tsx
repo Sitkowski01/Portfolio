@@ -255,9 +255,10 @@ export default function TechKeyboard() {
         </motion.div>
         </div>
 
-        {/* Podpowiedź przewijania — tylko telefon */}
-        <div className="sm:hidden mt-3 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-terminal-text/40">
-          {tr("← przewiń w bok →", "← swipe →")}
+        {/* Podpowiedź przewijania — tylko telefon (czytelny pill = celowa interakcja) */}
+        <div className="sm:hidden -mt-1 flex items-center gap-2 rounded-full border border-terminal-border bg-terminal-bg/70 px-3 py-1 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-terminal-text/60">
+          <span aria-hidden="true" className="text-bull">⇄</span>
+          {tr("przesuń, by zobaczyć całość", "swipe to see all")}
         </div>
 
         {/* Etykieta najechanej technologii (poza obszarem scrolla — zawsze wyśrodkowana) */}

@@ -359,9 +359,10 @@ export default function ScrollStoryImpl() {
               .getElementById("hero")
               ?.scrollIntoView({ behavior: "instant" })
           }
-          className="absolute bottom-8 left-6 z-40 font-mono text-xs text-terminal-text uppercase tracking-widest border border-terminal-border rounded-md px-4 py-2 hover:text-terminal-highlight hover:border-terminal-text transition-colors bg-terminal-bg/60 cursor-pointer"
+          className="absolute bottom-5 left-5 z-40 glass-panel border border-terminal-border rounded-lg px-3.5 py-2.5 font-mono text-xs uppercase tracking-wider text-terminal-text hover:text-bull hover:border-bull/50 transition-colors flex items-center gap-2 shadow-panel cursor-pointer"
         >
-          {tr("Pomiń intro", "Skip intro")} ↓
+          {tr("Pomiń intro", "Skip intro")}
+          <span aria-hidden="true">↓</span>
         </button>
       </div>
     </section>
