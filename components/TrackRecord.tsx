@@ -228,10 +228,12 @@ export default function TrackRecord() {
                   />
                 </span>
 
-                <div className="group glass-panel border border-terminal-border rounded-xl p-5 sm:p-6 pr-24 sm:pr-40 relative overflow-hidden transition-colors hover:border-bull/40">
-                  {/* Ikona typu wpisu — neonowa zieleń, wyśrodkowana pionowo, hover-animacja */}
+                <div className="group glass-panel border border-terminal-border rounded-xl p-5 sm:p-6 sm:pr-40 relative overflow-hidden transition-colors hover:border-bull/40">
+                  {/* Ikona typu wpisu — neonowa zieleń, wyśrodkowana pionowo, hover-animacja.
+                      Ukryta na telefonie: przy wąskich (wysokich) kartach pływała
+                      obok środkowego punktu i wyglądała przypadkowo. */}
                   <span
-                    className="pointer-events-none absolute right-10 sm:right-20 top-1/2 w-12 h-12 sm:w-16 sm:h-16 text-bull/35 transition-all duration-300 ease-out -translate-y-1/2 group-hover:text-bull group-hover:scale-110 group-hover:-rotate-6 group-hover:drop-shadow-[0_0_14px_rgba(16,185,129,0.75)]"
+                    className="pointer-events-none hidden sm:block absolute right-20 top-1/2 w-16 h-16 text-bull/35 transition-all duration-300 ease-out -translate-y-1/2 group-hover:text-bull group-hover:scale-110 group-hover:-rotate-6 group-hover:drop-shadow-[0_0_14px_rgba(16,185,129,0.75)]"
                   >
                     {e.icon}
                   </span>

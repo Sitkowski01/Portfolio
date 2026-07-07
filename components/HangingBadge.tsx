@@ -18,9 +18,6 @@ export default function HangingBadge() {
     // Bez fizyki przy reduced motion — badge wisi statycznie
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Na ekranach dotykowych przeciąganie walczy ze scrollem — tylko fine pointer
-    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-
     let isDragging = false;
     const anchorX = 140; // Center of the 280px wrapper
     const anchorY = 0; // Top of the wrapper
@@ -36,25 +33,26 @@ export default function HangingBadge() {
     const mouseOffset = { x: 0, y: 0 };
     let rafId = 0;
 
-    const startDrag = (e: MouseEvent | TouchEvent) => {
+    // Pointer Events — jedna ścieżka dla myszy i dotyku. `touch-action: none`
+    // na badge (patrz JSX) sprawia, że dotykowe przeciąganie karty nie scrolluje
+    // strony, a scroll poza kartą działa normalnie.
+    const startDrag = (e: PointerEvent) => {
       isDragging = true;
       const rect = badgeWrapper.getBoundingClientRect();
-      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
-
-      mouseOffset.x = clientX - rect.left - pos.x;
-      mouseOffset.y = clientY - rect.top - pos.y;
+      mouseOffset.x = e.clientX - rect.left - pos.x;
+      mouseOffset.y = e.clientY - rect.top - pos.y;
       badge.style.cursor = "grabbing";
+      try {
+        badge.setPointerCapture(e.pointerId);
+      } catch {}
     };
 
-    const doDrag = (e: MouseEvent | TouchEvent) => {
+    const doDrag = (e: PointerEvent) => {
       if (!isDragging) return;
+      e.preventDefault();
       const rect = badgeWrapper.getBoundingClientRect();
-      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
-
-      pos.x = clientX - rect.left - mouseOffset.x;
-      pos.y = clientY - rect.top - mouseOffset.y;
+      pos.x = e.clientX - rect.left - mouseOffset.x;
+      pos.y = e.clientY - rect.top - mouseOffset.y;
 
       vel.x = 0;
       vel.y = 0;
@@ -65,11 +63,10 @@ export default function HangingBadge() {
       badge.style.cursor = "grab";
     };
 
-    if (!isTouchDevice) {
-      badge.addEventListener("mousedown", startDrag);
-      window.addEventListener("mousemove", doDrag);
-      window.addEventListener("mouseup", endDrag);
-    }
+    badge.addEventListener("pointerdown", startDrag);
+    window.addEventListener("pointermove", doDrag, { passive: false });
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
 
     const updatePhysics = () => {
       if (!isDragging) {
@@ -109,9 +106,10 @@ export default function HangingBadge() {
 
     return () => {
       cancelAnimationFrame(rafId);
-      badge.removeEventListener("mousedown", startDrag);
-      window.removeEventListener("mousemove", doDrag);
-      window.removeEventListener("mouseup", endDrag);
+      badge.removeEventListener("pointerdown", startDrag);
+      window.removeEventListener("pointermove", doDrag);
+      window.removeEventListener("pointerup", endDrag);
+      window.removeEventListener("pointercancel", endDrag);
     };
   }, []);
 
@@ -138,7 +136,11 @@ export default function HangingBadge() {
         <div
           ref={badgeRef}
           className="absolute top-[120px] left-[140px] w-[220px] bg-terminal-panel/80 backdrop-blur-md border border-terminal-border rounded-xl shadow-panel flex flex-col items-center p-4 pointer-events-auto cursor-grab select-none transition-shadow hover:shadow-neon-green"
-          style={{ transformOrigin: "50% 0%", transform: "translate(-50%, 0)" }}
+          style={{
+            transformOrigin: "50% 0%",
+            transform: "translate(-50%, 0)",
+            touchAction: "none",
+          }}
         >
           {/* Hole */}
           <div className="w-3 h-2 bg-terminal-bg rounded-full shadow-inner mb-4 mt-1 border border-terminal-border"></div>

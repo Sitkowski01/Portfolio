@@ -97,7 +97,7 @@ export default function Ratings() {
         <span className="text-xs text-terminal-text/60">
           {tr(`${TOTAL} analityków · 0 sprzedaj`, `${TOTAL} analysts · 0 sell`)}
         </span>
-        <span className="ml-auto text-[0.65rem] uppercase tracking-widest text-terminal-text/40">
+        <span className="w-full sm:w-auto sm:ml-auto text-[0.65rem] uppercase tracking-widest text-terminal-text/40">
           {tr("coverage: 2023 — teraz", "coverage: 2023 — now")}
         </span>
       </div>
