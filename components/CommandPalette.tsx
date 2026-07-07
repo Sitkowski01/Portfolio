@@ -261,21 +261,21 @@ export default function CommandPalette() {
                     key={cmd.keyword}
                     onClick={() => run(cmd)}
                     onMouseEnter={() => setSelected(i)}
-                    className={`w-full flex items-center justify-between px-4 py-2.5 font-mono text-sm cursor-pointer transition-colors ${
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 font-mono text-[0.8rem] sm:text-sm text-left cursor-pointer transition-colors ${
                       i === selected
                         ? "bg-bull/10 text-terminal-highlight"
                         : "text-terminal-text"
                     }`}
                   >
-                    <span className="flex items-center gap-3">
-                      <span
-                        className={`text-bull ${i === selected ? "opacity-100" : "opacity-0"}`}
-                      >
-                        ▸
-                      </span>
+                    <span
+                      className={`shrink-0 text-bull ${i === selected ? "opacity-100" : "opacity-0"}`}
+                    >
+                      ▸
+                    </span>
+                    <span className="flex-1 min-w-0">
                       {tr(cmd.label.pl, cmd.label.en)}
                     </span>
-                    <span className="text-xs text-terminal-text/50">
+                    <span className="hidden sm:block shrink-0 text-xs text-terminal-text/50">
                       {cmd.hint}
                     </span>
                   </button>

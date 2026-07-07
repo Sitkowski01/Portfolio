@@ -12,7 +12,7 @@ const GITHUB_URL: string = "https://github.com/sitkowski01";
 export default function Contact() {
   const tr = useTr();
   return (
-    <section id="contact" className="reveal pb-24">
+    <section id="contact" className="reveal pb-4 sm:pb-24">
       <div className="glass-panel border border-terminal-border rounded-2xl p-8 md:p-14 relative overflow-hidden">
         {/* Abstract BG element */}
         <div className="absolute inset-0 bg-gradient-to-b from-bull/5 to-transparent pointer-events-none"></div>

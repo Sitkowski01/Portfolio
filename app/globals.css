@@ -647,6 +647,11 @@ button:focus-visible,
   .kb-board {
     --u: clamp(42px, 12vw, 50px);
     margin-inline: 0;
+    /* Bez tego deck ograniczał się do szerokości ekranu, a keycapy (szersze)
+       wystawały poza panel. Naturalna szerokość = deck obejmuje wszystkie
+       klawisze, a przewijanie robi .kb-scroll. */
+    max-width: none;
+    width: max-content;
   }
   .kb-scroll {
     overflow-x: auto;
