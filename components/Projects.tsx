@@ -487,6 +487,11 @@ export default function Projects() {
               >
                 {cover ? (
                   <>
+                    {/* Placeholder pod ładujący się obrazek — zamiast czarnej
+                        pustki widać wyblakły ticker (pulsuje = „ładuję"). */}
+                    <span className="absolute inset-0 flex items-center justify-center font-mono text-4xl font-bold text-terminal-border/40 select-none pointer-events-none animate-pulse">
+                      {project.ticker}
+                    </span>
                     <img
                       src={cover}
                       alt=""
