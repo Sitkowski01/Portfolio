@@ -23,10 +23,10 @@ export default function Hero() {
 
           <h1
             data-particle-anchor="hero-text"
-            className="font-display text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-terminal-highlight leading-tight"
+            className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-terminal-highlight leading-tight"
           >
             <span className="text-gradient-light">Mikołaj Sitek</span>
-            <span className="block text-3xl sm:text-4xl md:text-5xl text-terminal-text mt-2 font-medium">
+            <span className="block text-2xl sm:text-4xl md:text-5xl text-terminal-text mt-2 font-medium">
               Fullstack Developer — Web & Mobile
             </span>
           </h1>
