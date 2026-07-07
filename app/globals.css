@@ -367,7 +367,9 @@ section[id] {
    ========================================= */
 .webgl-text-mask {
   position: absolute;
-  inset: -2rem;
+  /* < px-6 (1.5rem) paddingu strony — inaczej maska wystaje poza viewport
+     na telefonach i robi poziomy scroll */
+  inset: -1.25rem;
   background: radial-gradient(
     ellipse at center,
     rgba(3, 7, 18, 0.92) 0%,
@@ -376,6 +378,11 @@ section[id] {
   );
   pointer-events: none;
   z-index: -1;
+}
+@media (min-width: 640px) {
+  .webgl-text-mask {
+    inset: -2rem; /* od sm padding strony to 2rem — mieści się */
+  }
 }
 
 /* =========================================
@@ -577,8 +584,10 @@ button:focus-visible,
   width: max-content;
   max-width: 100%;
   /* Jednostki keycapa — skalują całą klawiaturę responsywnie.
-     ~8.2vw sprawia, że pełna szerokość (≈10.9u) mieści się też na mobile. */
-  --u: clamp(26px, 8.2vw, 74px); /* szerokość keycapa */
+     Cała klawiatura (klawisze + padding decka) ≈ 12u szerokości; odejmujemy
+     paddingi strony (px-6/px-8), żeby nie wystawała poza kontener na
+     tabletach i mniejszych laptopach. */
+  --u: clamp(20px, calc((100vw - 4rem) / 12.1), 74px); /* szerokość keycapa */
   --g: calc(var(--u) * 0.16); /* szczelina między klawiszami */
   --U: calc(var(--u) + var(--g)); /* krok kolumny */
   --kh: calc(var(--u) * 0.95); /* wysokość keycapa */
@@ -704,7 +713,8 @@ button:focus-visible,
 .keycap-cap {
   font-family: var(--font-jetbrains-mono), monospace;
   font-weight: 700;
-  font-size: clamp(8px, 1.35vw, 15px);
+  /* Legenda skaluje się z keycapem (--u), nie z viewportem */
+  font-size: clamp(8px, calc(var(--u) * 0.2), 15px);
   letter-spacing: 0.01em;
   color: var(--accent, #e5e7eb);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
@@ -715,7 +725,7 @@ button:focus-visible,
 .keycap--special .keycap-cap {
   color: #8aa0bf;
   font-weight: 600;
-  font-size: clamp(8px, 0.95vw, 11px);
+  font-size: clamp(7px, calc(var(--u) * 0.14), 11px);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -862,11 +872,14 @@ button:focus-visible,
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
-/* Wariant scrollowy — karty absolutnie na środku decku, transform z JS */
+/* Wariant scrollowy — karty absolutnie na środku decku, transform z JS.
+   Szerokość z JS (--hobby-card-w) — dopasowana do wolnej wysokości pod
+   nagłówkiem, żeby karty nie najeżdżały na tekst na niższych ekranach. */
 .hobby-card--abs {
   position: absolute;
   top: 50%;
   left: 50%;
+  width: var(--hobby-card-w, clamp(210px, 48vw, 285px));
   will-change: transform;
 }
 .hobby-inner {
@@ -878,7 +891,13 @@ button:focus-visible,
 .hobby-inner--css {
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hobby-card:hover .hobby-inner--css,
+/* Flip na hover tylko tam, gdzie hover istnieje (mysz) — na dotyku
+   sticky :hover walczyłby z tapem (is-flipped). */
+@media (hover: hover) {
+  .hobby-card:hover .hobby-inner--css {
+    transform: rotateY(180deg);
+  }
+}
 .hobby-card:focus-visible .hobby-inner--css,
 .hobby-card.is-flipped .hobby-inner--css {
   transform: rotateY(180deg);

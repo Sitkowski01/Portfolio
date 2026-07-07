@@ -16,6 +16,9 @@ const ROT_LAMBDA = 3.0;
 const SCALE_LAMBDA = 3.0;
 const GROUND_Y = 0;
 
+// Punkt pomiaru kadru (współdzielony, bez alokacji w useFrame)
+const VIEW_TARGET = new THREE.Vector3();
+
 type Props = {
   progress: MutableRefObject<number>;
   onReady?: () => void;
@@ -76,7 +79,7 @@ export function AvatarController({ progress, onReady }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actions]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
     const dt = Math.min(delta, 0.05);
@@ -100,12 +103,25 @@ export function AvatarController({ progress, onReady }: Props) {
 
     // ── Osadzenie sceny → płynny transform (pozycja świata, prawa strona) ──
     const pos = av.position;
+
+    // Dopasowanie do kadru: pozycje/skale w scenes.ts są strojone pod desktop
+    // (16:9). Na wąskich ekranach (telefon/tablet pion) avatar zmniejsza się
+    // i wraca w obręb kadru zamiast uciekać za prawą krawędź.
+    const vp = state.viewport.getCurrentViewport(
+      state.camera,
+      VIEW_TARGET.set(0, 1.6, pos.z)
+    );
+    const halfW = vp.width / 2;
+    const scaleT = Math.min(av.scale, Math.max(1.6, halfW * 1.15));
+    // 0.5·scale ≈ pół sylwetki z machającą ręką — trzyma całość w kadrze
+    const xT = Math.min(pos.x, Math.max(0, halfW - scaleT * 0.5));
+
     const D = THREE.MathUtils.damp;
-    g.position.x = D(g.position.x, pos.x, POS_LAMBDA, dt);
+    g.position.x = D(g.position.x, xT, POS_LAMBDA, dt);
     g.position.y = D(g.position.y, pos.y, POS_LAMBDA, dt);
     g.position.z = D(g.position.z, pos.z, POS_LAMBDA, dt);
     g.rotation.y = D(g.rotation.y, av.rotationY, ROT_LAMBDA, dt);
-    g.scale.setScalar(D(g.scale.x, av.scale, SCALE_LAMBDA, dt));
+    g.scale.setScalar(D(g.scale.x, scaleT, SCALE_LAMBDA, dt));
 
     if (shadow.current) {
       shadow.current.position.x = g.position.x;
