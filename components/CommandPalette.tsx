@@ -117,6 +117,18 @@ export default function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const tr = useTr();
 
+  // Dotyk: chip to zwykły przycisk menu (bez podpowiedzi klawiszowych),
+  // a paleta nie łapie autofocusa — inaczej klawiatura systemowa
+  // zasłaniałaby listę komend. Start = false (zgodny z SSR).
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsTouch(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const filtered = COMMANDS.filter(
     (c) =>
       c.keyword.includes(query.toLowerCase()) ||
@@ -149,8 +161,8 @@ export default function CommandPalette() {
   }, []);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
+    if (open && !isTouch) inputRef.current?.focus();
+  }, [open, isTouch]);
 
   const run = (cmd: Command) => {
     setOpen(false);
@@ -176,15 +188,25 @@ export default function CommandPalette() {
       <button
         onClick={openPalette}
         className="fixed bottom-5 right-5 z-40 glass-panel border border-terminal-border rounded-lg px-3.5 py-2.5 font-mono text-xs text-terminal-text hover:text-bull hover:border-bull/50 transition-colors flex items-center gap-2 cursor-pointer shadow-panel"
-        aria-label={tr("Otwórz panel komend (Ctrl+K)", "Open command palette (Ctrl+K)")}
+        aria-label={
+          isTouch
+            ? tr("Otwórz menu nawigacji", "Open navigation menu")
+            : tr("Otwórz panel komend (Ctrl+K)", "Open command palette (Ctrl+K)")
+        }
       >
         <TerminalIcon className="w-4 h-4" />
-        <span className="hidden sm:inline uppercase tracking-wider">
-          Terminal
-        </span>
-        <kbd className="px-1.5 py-0.5 bg-terminal-bg border border-terminal-border rounded text-[0.65rem]">
-          Ctrl+K
-        </kbd>
+        {isTouch ? (
+          <span className="uppercase tracking-wider">Menu</span>
+        ) : (
+          <>
+            <span className="hidden sm:inline uppercase tracking-wider">
+              Terminal
+            </span>
+            <kbd className="px-1.5 py-0.5 bg-terminal-bg border border-terminal-border rounded text-[0.65rem]">
+              Ctrl+K
+            </kbd>
+          </>
+        )}
       </button>
 
       {/* Palette overlay */}
@@ -219,9 +241,11 @@ export default function CommandPalette() {
                 className="flex-1 bg-transparent outline-none text-terminal-highlight placeholder:text-terminal-text/40 text-sm"
                 aria-label={tr("Komenda", "Command")}
               />
-              <kbd className="px-1.5 py-0.5 bg-terminal-bg border border-terminal-border rounded text-[0.65rem] text-terminal-text shrink-0">
-                ESC
-              </kbd>
+              {!isTouch && (
+                <kbd className="px-1.5 py-0.5 bg-terminal-bg border border-terminal-border rounded text-[0.65rem] text-terminal-text shrink-0">
+                  ESC
+                </kbd>
+              )}
             </div>
 
             {/* Results */}
