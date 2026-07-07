@@ -59,7 +59,7 @@ function FundamentalsContent() {
       className="rounded-lg border border-terminal-border/70 bg-terminal-bg/40 py-2.5 pr-2 sm:pr-4 leading-[1.6] overflow-x-auto"
       // Font skaluje się z szerokością — cały JSON mieści się na telefonie
       // bez poziomego przewijania (na desktopie cap 0.8rem).
-      style={{ fontSize: "clamp(0.5rem, 2.5vw, 0.8rem)" }}
+      style={{ fontSize: "clamp(0.55rem, 2.45vw, 0.8rem)" }}
     >
       <CodeLine n={1}>
         <span className={jPunct}>{"{"}</span>
@@ -423,8 +423,9 @@ export default function Profile() {
               ))}
             </div>
 
-            {/* Content */}
-            <div className="p-4 sm:p-8 font-mono text-[0.8rem] sm:text-sm leading-relaxed min-h-[320px] text-terminal-text">
+            {/* Content — mniejsza czcionka na telefonie, blisko rozmiaru JSON-a
+                (który musi być mały, żeby zmieścić się na szerokość) */}
+            <div className="p-4 sm:p-8 font-mono text-[0.72rem] sm:text-sm leading-relaxed min-h-[280px] sm:min-h-[320px] text-terminal-text">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={tab}

@@ -180,11 +180,10 @@ export default function ScrollStoryImpl() {
         hintRef.current.style.opacity = clamp01(1 - smooth / 0.03).toFixed(3);
       }
 
-      // Wyciszenie całej sekcji tuż przed kolejną treścią.
-      sticky.style.opacity = (smooth > 0.97
-        ? clamp01(1 - (smooth - 0.97) / 0.03)
-        : 1
-      ).toFixed(3);
+      // Ostatnia scena zostaje widoczna do końca — Hero „wjeżdża" na nią
+      // przy dalszym scrollu. (Bez wyciemniania do czerni, które tworzyło
+      // czarną dziurę między intro a Hero.)
+      sticky.style.opacity = "1";
 
       // Renderuj klatkę R3F tylko gdy intro jest widoczne (frameloop="demand").
       // Poza intro canvas nie kręci pętli 60 fps przez resztę strony.
@@ -341,9 +340,9 @@ export default function ScrollStoryImpl() {
         {/* ── Podpowiedź scrolla ──────────────────────────────────────── */}
         <div
           ref={hintRef}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
+          className="absolute bottom-24 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
         >
-          <span className="font-mono text-xs text-terminal-text uppercase tracking-widest">
+          <span className="font-mono text-[0.7rem] sm:text-xs text-terminal-text uppercase tracking-widest whitespace-nowrap">
             {tr("Scrolluj, żeby ruszyć", "Scroll to begin")}
           </span>
           <span className="text-bull animate-bounce">▼</span>
