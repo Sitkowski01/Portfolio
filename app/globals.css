@@ -309,6 +309,37 @@ section[id] {
   opacity: 1;
 }
 
+/* Dotyk: brak hovera, więc zdjęcie normalnie się nie koloruje, a foil/glare
+   nigdy się nie pokazują. Na urządzeniach dotykowych włączamy kolor na stałe
+   i delikatny, samoczynny „mieniący się" foil, żeby karta żyła bez najeżdżania. */
+@media (hover: none) {
+  .card-photo-3d {
+    mix-blend-mode: normal;
+    opacity: 1;
+  }
+  .card-foil-3d {
+    opacity: 0.5;
+    animation: card-foil-sweep 5.5s ease-in-out infinite;
+  }
+  .card-glare-3d {
+    opacity: 0.4;
+  }
+}
+@keyframes card-foil-sweep {
+  0%,
+  100% {
+    background-position: 12% 30%;
+  }
+  50% {
+    background-position: 88% 70%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-foil-3d {
+    animation: none !important;
+  }
+}
+
 .card-content-3d {
   position: relative;
   z-index: 20;
@@ -599,6 +630,43 @@ button:focus-visible,
   }
 }
 
+/* Kontener przewijania — istotny tylko na telefonie */
+.kb-scroll {
+  max-width: 100%;
+}
+@media (max-width: 639px) {
+  /* Telefon: większe, czytelne keycapy + przewijanie w poziomie.
+     Napisy jak „Motion"/„Docker"/„Claude" mieszczą się w całości. */
+  .kb-board {
+    --u: clamp(46px, 13.5vw, 56px);
+    margin-inline: 0;
+  }
+  .kb-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 38px 22px 52px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 22px,
+      #000 calc(100% - 22px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 22px,
+      #000 calc(100% - 22px),
+      transparent 100%
+    );
+  }
+  .kb-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .kb-underglow {
   position: absolute;
   left: 50%;
@@ -833,6 +901,14 @@ button:focus-visible,
   background-size: 170px 170px;
   animation: crt-static 0.4s steps(4) infinite;
 }
+/* Telefon: pełnoekranowy, animowany szum repaintuje cały ekran ~2,5×/s i
+   powoduje lagi — zostawiamy statyczne ziarno bez animacji. */
+@media (max-width: 639px) {
+  .noise-bg {
+    animation: none;
+    opacity: 0.1;
+  }
+}
 
 /* Interaction Lab — Meaningful State (1:1 z eksperyment14.html) */
 .feedback-btn {
@@ -863,7 +939,10 @@ button:focus-visible,
   perspective: 2200px;
 }
 .hobby-card {
-  width: clamp(210px, 48vw, 285px);
+  /* Szerszy w siatce (mobile/tablet) — przy 3:4 daje dość wysokości, żeby
+     dossier na rewersie mieściło się w całości (wcześniej ucinało „Dlaczego").
+     Wariant wachlarza (--abs) i tak nadpisuje szerokość z JS. */
+  width: clamp(240px, 74vw, 280px);
   aspect-ratio: 3 / 4;
   transform-style: preserve-3d;
   cursor: pointer;

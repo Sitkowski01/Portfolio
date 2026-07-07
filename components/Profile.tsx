@@ -39,10 +39,10 @@ function keyCol(name: string, width: number) {
 function CodeLine({ n, children }: { n: number; children: React.ReactNode }) {
   return (
     <div className="flex">
-      <span className="select-none w-9 shrink-0 pl-1 pr-3 text-right text-terminal-text/25 tabular-nums border-r border-terminal-border/40">
+      <span className="select-none w-6 sm:w-9 shrink-0 pl-1 pr-2 sm:pr-3 text-right text-terminal-text/25 tabular-nums border-r border-terminal-border/40">
         {n}
       </span>
-      <div className="whitespace-pre flex-1 pl-3">{children}</div>
+      <div className="whitespace-pre flex-1 pl-2 sm:pl-3">{children}</div>
     </div>
   );
 }
@@ -55,7 +55,12 @@ function FundamentalsContent() {
   );
 
   return (
-    <div className="rounded-lg border border-terminal-border/70 bg-terminal-bg/40 py-2.5 pr-4 text-xs leading-[1.6] overflow-x-auto">
+    <div
+      className="rounded-lg border border-terminal-border/70 bg-terminal-bg/40 py-2.5 pr-2 sm:pr-4 leading-[1.6] overflow-x-auto"
+      // Font skaluje się z szerokością — cały JSON mieści się na telefonie
+      // bez poziomego przewijania (na desktopie cap 0.8rem).
+      style={{ fontSize: "clamp(0.5rem, 2.5vw, 0.8rem)" }}
+    >
       <CodeLine n={1}>
         <span className={jPunct}>{"{"}</span>
       </CodeLine>
@@ -406,7 +411,7 @@ export default function Profile() {
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`px-4 sm:px-5 py-2.5 font-mono text-xs sm:text-sm border-r border-terminal-border transition-colors cursor-pointer whitespace-nowrap ${
+                  className={`px-3 sm:px-5 py-2.5 font-mono text-[0.7rem] sm:text-sm border-r border-terminal-border transition-colors cursor-pointer whitespace-nowrap ${
                     tab === t.id
                       ? "bg-terminal-panel text-bull border-b-2 border-b-bull -mb-[1px]"
                       : "text-terminal-text hover:text-terminal-highlight hover:bg-terminal-panel/50"

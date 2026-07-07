@@ -191,7 +191,10 @@ export default function TechKeyboard() {
         title={tr("Klawiatura technologii", "Technology keyboard")}
       />
 
-      <div className="flex justify-center py-6 sm:py-10">
+      <div className="flex flex-col items-center py-6 sm:py-10">
+        {/* Na telefonie klawiatura jest przewijana w poziomie (kb-scroll) —
+            keycapy są większe i czytelne zamiast ściśnięte do nieczytelności. */}
+        <div className="kb-scroll">
         <motion.div
           className="kb-board"
           initial={reduce ? "show" : "hidden"}
@@ -249,9 +252,16 @@ export default function TechKeyboard() {
               })}
             </motion.div>
           </motion.div>
+        </motion.div>
+        </div>
 
-          {/* Etykieta najechanej technologii */}
-          <div className="pointer-events-none mt-7 flex h-8 items-center justify-center">
+        {/* Podpowiedź przewijania — tylko telefon */}
+        <div className="sm:hidden mt-3 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-terminal-text/40">
+          {tr("← przewiń w bok →", "← swipe →")}
+        </div>
+
+        {/* Etykieta najechanej technologii (poza obszarem scrolla — zawsze wyśrodkowana) */}
+        <div className="pointer-events-none mt-5 sm:mt-7 flex h-8 items-center justify-center">
             <motion.div
               initial={false}
               animate={{ opacity: hover ? 1 : 0, y: hover ? 0 : 6 }}
@@ -273,7 +283,6 @@ export default function TechKeyboard() {
               </span>
             </motion.div>
           </div>
-        </motion.div>
       </div>
 
       {/* Skanowalna lista — to, co recruiter czyta naprawdę */}
