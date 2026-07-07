@@ -491,6 +491,7 @@ export default function Projects() {
                       src={cover}
                       alt=""
                       aria-hidden="true"
+                      loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl opacity-40"
                     />
                     <img
@@ -518,6 +519,7 @@ export default function Projects() {
                     <img
                       src={project.logo}
                       alt={`Logo ${title}`}
+                      loading="lazy"
                       className="w-8 h-8 rounded-lg border border-white/10 shadow-lg"
                     />
                   )}

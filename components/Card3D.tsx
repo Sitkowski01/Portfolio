@@ -86,7 +86,7 @@ export default function Card3D() {
               <img
                 src="/ja.webp"
                 alt="Mikołaj Sitek"
-                className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500 mix-blend-luminosity group-hover:mix-blend-normal"
+                className="card-photo-3d object-cover object-top w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500 mix-blend-luminosity group-hover:mix-blend-normal"
               />
               <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
               <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-terminal-bg to-transparent opacity-60"></div>

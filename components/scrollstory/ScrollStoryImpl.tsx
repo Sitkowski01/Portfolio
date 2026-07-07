@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, invalidate } from "@react-three/fiber";
 import { AvatarController } from "./AvatarController";
 import { SCENES, SCENE_COUNT, buildCaptions, type Caption } from "./scenes";
 import { useTr } from "../i18n";
@@ -87,6 +87,10 @@ export default function ScrollStoryImpl() {
   // Postęp scrolla współdzielony z Avatarem (czytany w useFrame R3F).
   const progress = useRef(0);
   const [loaded, setLoaded] = useState(false);
+  // Avatar (5.8 MB GLB) montujemy dopiero, gdy scroll zbliża się do sceny 6 —
+  // scen 1–5 nie obciąża pobieranie modelu na starcie strony.
+  const [showAvatar, setShowAvatar] = useState(false);
+  const showAvatarRef = useRef(false);
   const tr = useTr();
 
   const [mode] = useState<"3d" | "static">(() => {
@@ -118,6 +122,12 @@ export default function ScrollStoryImpl() {
       // Tłumienie — scroll „dopływa" do celu zamiast skakać.
       smooth += (target - smooth) * 0.12;
       progress.current = smooth;
+
+      // Zacznij pobierać model, gdy jesteśmy w połowie drogi do sceny 6.
+      if (!showAvatarRef.current && smooth > 0.4) {
+        showAvatarRef.current = true;
+        setShowAvatar(true);
+      }
 
       const local = smooth * SCENE_COUNT;
 
@@ -175,6 +185,10 @@ export default function ScrollStoryImpl() {
         ? clamp01(1 - (smooth - 0.97) / 0.03)
         : 1
       ).toFixed(3);
+
+      // Renderuj klatkę R3F tylko gdy intro jest widoczne (frameloop="demand").
+      // Poza intro canvas nie kręci pętli 60 fps przez resztę strony.
+      invalidate();
     };
     tick();
     return () => cancelAnimationFrame(raf);
@@ -235,6 +249,7 @@ export default function ScrollStoryImpl() {
         <Canvas
           aria-hidden="true"
           className="absolute inset-0 !pointer-events-none"
+          frameloop="demand"
           dpr={[1, 1.75]}
           gl={{ antialias: true, alpha: true }}
           camera={{ position: [0, 1.6, 9], fov: 34 }}
@@ -249,7 +264,9 @@ export default function ScrollStoryImpl() {
           <directionalLight position={[3, 5, 4]} intensity={2.0} color="#f8fafc" />
           <directionalLight position={[-3, 3, -3]} intensity={2.4} color="#10b981" />
           <Suspense fallback={null}>
-            <AvatarController progress={progress} onReady={() => setLoaded(true)} />
+            {showAvatar && (
+              <AvatarController progress={progress} onReady={() => setLoaded(true)} />
+            )}
           </Suspense>
         </Canvas>
 
@@ -272,8 +289,8 @@ export default function ScrollStoryImpl() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_50%,rgba(16,185,129,0.5),rgba(248,250,252,0.25)_30%,transparent_65%)]" />
         </div>
 
-        {/* ── Loader avatara ──────────────────────────────────────────── */}
-        {!loaded && (
+        {/* ── Loader avatara (dopiero gdy zaczynamy pobierać model) ────── */}
+        {showAvatar && !loaded && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="font-mono text-xs text-terminal-text uppercase tracking-widest">
               {tr("Ładowanie avatara", "Loading avatar")}<span className="cursor-blink">█</span>
