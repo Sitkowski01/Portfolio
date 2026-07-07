@@ -177,7 +177,7 @@ function StrategyContent() {
   if (lang === "en") {
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-bull font-bold text-base sm:text-lg"># Work philosophy</p>
+        <p className="text-bull font-bold text-sm sm:text-lg"># Work philosophy</p>
         <div className="border-l-2 border-bull/60 pl-4 text-terminal-highlight italic leading-relaxed">
           <span className="text-terminal-text/50 not-italic">&gt; </span>
           &quot;A good app isn&apos;t just code that works — it&apos;s a thoughtful
@@ -207,7 +207,7 @@ function StrategyContent() {
   }
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-bull font-bold text-base sm:text-lg"># Filozofia pracy</p>
+      <p className="text-bull font-bold text-sm sm:text-lg"># Filozofia pracy</p>
       <div className="border-l-2 border-bull/60 pl-4 text-terminal-highlight italic leading-relaxed">
         <span className="text-terminal-text/50 not-italic">&gt; </span>
         &quot;Dobra aplikacja to nie tylko kod, który działa — to przemyślana
@@ -241,7 +241,7 @@ function NowContent() {
   if (lang === "en") {
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-bull font-bold text-base sm:text-lg"># What I&apos;m focused on now</p>
+        <p className="text-bull font-bold text-sm sm:text-lg"># What I&apos;m focused on now</p>
         <p className="leading-relaxed">
           Updated: <span className={hl}>2026 / Q2</span> — after graduating, I combine
           work, learning and my own projects to keep pushing my craft forward.
@@ -271,7 +271,7 @@ function NowContent() {
   }
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-bull font-bold text-base sm:text-lg"># Na czym teraz skupiam</p>
+      <p className="text-bull font-bold text-sm sm:text-lg"># Na czym teraz skupiam</p>
       <p className="leading-relaxed">
         Aktualizacja:{" "}
         <span className={hl}>2026 / Q2</span> — po studiach,
@@ -309,7 +309,7 @@ function EdgeContent() {
   if (lang === "en") {
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-bull font-bold text-base sm:text-lg"># What sets me apart</p>
+        <p className="text-bull font-bold text-sm sm:text-lg"># What sets me apart</p>
         <p className="leading-relaxed">
           I don&apos;t stop at the visual layer — I take responsibility for the
           whole product, until it runs in production.
@@ -341,7 +341,7 @@ function EdgeContent() {
   }
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-bull font-bold text-base sm:text-lg"># Co mnie wyróżnia</p>
+      <p className="text-bull font-bold text-sm sm:text-lg"># Co mnie wyróżnia</p>
       <p className="leading-relaxed">
         Nie zatrzymuję się na warstwie wizualnej — biorę odpowiedzialność za
         cały produkt, aż działa na produkcji.
@@ -424,7 +424,7 @@ export default function Profile() {
             </div>
 
             {/* Content */}
-            <div className="p-6 sm:p-8 font-mono text-sm min-h-[320px] text-terminal-text">
+            <div className="p-4 sm:p-8 font-mono text-[0.8rem] sm:text-sm leading-relaxed min-h-[320px] text-terminal-text">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={tab}

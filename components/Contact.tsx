@@ -42,14 +42,14 @@ export default function Contact() {
             <div>
               <h2
                 data-particle-anchor="contact-title"
-                className="text-3xl md:text-4xl font-bold text-terminal-highlight tracking-tight mb-5"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-terminal-highlight tracking-tight mb-5"
               >
                 {tr(
                   "Gotowy na wspólną inwestycję?",
                   "Ready to invest together?"
                 )}
               </h2>
-              <p className="text-lg text-terminal-text mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg text-terminal-text mb-8 leading-relaxed">
                 {tr(
                   "Szukam miejsca, gdzie połączę fullstack development, myślenie produktowe i dane — tam, gdzie kod realnie trafia do użytkowników. Masz projekt, ofertę pracy albo chcesz pogadać o giełdzie i danych?",
                   "I'm looking for a place to combine fullstack development, product thinking and data — where code actually reaches users. Got a project, a job offer, or just want to talk markets and data?"
