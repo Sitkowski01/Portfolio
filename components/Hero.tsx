@@ -2,7 +2,7 @@
 
 import Card3D from "./Card3D";
 import QuoteBar from "./QuoteBar";
-import { BriefcaseIcon, MailIcon, DownloadIcon } from "./Icons";
+import { BriefcaseIcon, MailIcon, EyeIcon } from "./Icons";
 import { useTr } from "./i18n";
 
 export default function Hero() {
@@ -48,17 +48,18 @@ export default function Hero() {
               <BriefcaseIcon className="w-4 h-4" /> {tr("Zobacz projekty", "View projects")}
             </a>
             <a
-              href="#contact"
+              href="#contact-cta"
               className="px-8 py-4 bg-transparent text-terminal-highlight border border-terminal-border rounded-md transition-all hover:border-terminal-highlight hover:bg-terminal-panel flex items-center gap-2"
             >
               <MailIcon className="w-4 h-4" /> {tr("Kontakt", "Contact")}
             </a>
             <a
               href="/cv.pdf"
-              download
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-transparent text-terminal-text border border-terminal-border rounded-md transition-all hover:border-bull hover:text-bull flex items-center gap-2"
             >
-              <DownloadIcon className="w-4 h-4" /> {tr("Pobierz CV", "Download CV")}
+              <EyeIcon className="w-4 h-4" /> {tr("Wyświetl CV", "View CV")}
             </a>
           </div>
         </div>

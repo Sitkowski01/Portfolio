@@ -26,7 +26,7 @@ const HOBBIES: Hobby[] = [
     title: { pl: "Giełda", en: "Stock market" },
     tag: { pl: "Inwestowanie", en: "Investing" },
     essence: { pl: "Rynki czytane chłodno, nie emocjami.", en: "Markets read coolly, not emotionally." },
-    since: { pl: "Bakcyla zaszczepił tata — potem już sam.", en: "My dad got me into it — then I ran with it." },
+    since: { pl: "Zaczęło się od taty, dalej już działałem sam.", en: "Started with my dad, then worked at it on my own." },
     what: { pl: "Trendy, formacje i świadome zarządzanie ryzykiem.", en: "Trends, patterns and deliberate risk management." },
     why: { pl: "Cierpliwość, dane i dobry timing — to mnie wciąga.", en: "Patience, data and good timing — that's what hooks me." },
   },
@@ -58,7 +58,7 @@ const HOBBIES: Hobby[] = [
     essence: { pl: "Logika, dane i sport w jednym.", en: "Logic, data and sport in one." },
     since: { pl: "Od liceum łączę programowanie z analizą i sportem.", en: "Since high school I've mixed programming with analysis and sport." },
     what: { pl: "Łączę web, mobile i dane — zawodowo i po godzinach.", en: "I mix web, mobile and data — at work and after hours." },
-    why: { pl: "Lubię rozumieć, jak coś działa, i robić to lepiej.", en: "I like understanding how things work — and doing them better." },
+    why: { pl: "Bo nic nie cieszy tak jak coś, co sam zbudowałem i naprawdę działa.", en: "Because nothing feels better than building something that actually works." },
   },
   {
     id: "gry",

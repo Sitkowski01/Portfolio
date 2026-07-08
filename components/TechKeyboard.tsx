@@ -29,6 +29,43 @@ const CAT_EN: Record<string, string> = {
   Narzędzia: "Tools",
 };
 
+// Gdzie i do czego realnie używam danej technologii (po najechaniu na klawisz).
+type UseNote = { pl: string; en: string };
+const USE: Record<string, UseNote> = {
+  TypeScript: { pl: "Skaner Biznesowy, magisterka i ta strona — typowanie całego kodu", en: "Business Scanner, thesis and this site — typing across the codebase" },
+  JavaScript: { pl: "Bazowy język front/back we wszystkich projektach", en: "Core front/back language across all projects" },
+  Python: { pl: "Backend Eksploruj Polskę (FastAPI) + modele ML w magisterce", en: "Explore Poland backend (FastAPI) + ML models in the thesis" },
+  HTML: { pl: "Struktura landingów: Pixel Bites, Bistro", en: "Structure of landings: Pixel Bites, Bistro" },
+  CSS: { pl: "Stylowanie i animacje landingów restauracyjnych", en: "Styling and animating the restaurant landings" },
+  SQL: { pl: "Baza PostgreSQL/PostGIS w Eksploruj Polskę", en: "PostgreSQL/PostGIS database in Explore Poland" },
+  React: { pl: "Pixel Bites, Bistro, System rezerwacji", en: "Pixel Bites, Bistro, reservation system" },
+  "React Native": { pl: "Skaner Biznesowy, SplitDeBill i koncepty mobilne", en: "Business Scanner, SplitDeBill and mobile concepts" },
+  "Next.js": { pl: "Eksploruj Polskę + to portfolio", en: "Explore Poland + this portfolio" },
+  Blender: { pl: "Modele 3D i animacje avatara na tej stronie", en: "3D models and avatar animations on this site" },
+  Expo: { pl: "Buildy i development aplikacji React Native", en: "Builds and development of the React Native apps" },
+  Vite: { pl: "Bundler: Pixel Bites, Bistro, System rezerwacji", en: "Bundler: Pixel Bites, Bistro, reservation system" },
+  "Three.js": { pl: "Tło 3D WebGL: Pixel Bites + intro tej strony", en: "3D WebGL background: Pixel Bites + this site's intro" },
+  Angular: { pl: "Front pracy magisterskiej (AI triage medyczny)", en: "Frontend of the master's thesis (medical AI triage)" },
+  "Tailwind CSS": { pl: "Stylowanie: Bistro, rezerwacje i to portfolio", en: "Styling: Bistro, reservations and this portfolio" },
+  NativeWind: { pl: "Stylowanie warstwy mobilnej w SplitDeBill", en: "Styling the mobile layer in SplitDeBill" },
+  GSAP: { pl: "Animacje scroll-triggered w Pixel Bites", en: "Scroll-triggered animations in Pixel Bites" },
+  "Framer Motion": { pl: "Animacje UI w tym portfolio", en: "UI animations in this portfolio" },
+  "Radix UI": { pl: "Komponenty UI: Bistro, System rezerwacji", en: "UI components: Bistro, reservation system" },
+  Figma: { pl: "Projekty źródłowe Bistro i Systemu rezerwacji", en: "Source designs for Bistro and the reservation system" },
+  "Node.js": { pl: "Backend / REST API pracy magisterskiej", en: "Backend / REST API of the master's thesis" },
+  Express: { pl: "Warstwa API w projektach opartych o Node", en: "API layer in Node-based projects" },
+  FastAPI: { pl: "Backend web app Eksploruj Polskę", en: "Backend of the Explore Poland web app" },
+  Firebase: { pl: "Auth, baza i Cloud Functions w Skanerze Biznesowym", en: "Auth, DB and Cloud Functions in Business Scanner" },
+  Supabase: { pl: "Backend i autoryzacja Systemu rezerwacji", en: "Backend and auth of the reservation system" },
+  PostgreSQL: { pl: "Baza z PostGIS w Eksploruj Polskę", en: "Database with PostGIS in Explore Poland" },
+  "Gemini AI": { pl: "Analiza zdjęć wykresów w Skanerze Biznesowym", en: "Analyzing chart photos in Business Scanner" },
+  OpenAI: { pl: "Generowanie opisów atrakcji w Eksploruj Polskę", en: "Generating attraction descriptions in Explore Poland" },
+  Docker: { pl: "Konteneryzacja: OCR w SplitDeBill, Eksploruj Polskę", en: "Containerization: OCR in SplitDeBill, Explore Poland" },
+  "Claude AI": { pl: "Wsparcie przy briefach i budowie tej strony", en: "Support for product briefs and building this site" },
+  Highsfield: { pl: "Generowanie mediów 3D/wideo do intro strony", en: "Generating 3D/video media for the site intro" },
+  Git: { pl: "Wersjonowanie wszystkich projektów (30+ repozytoriów)", en: "Version control across all projects (30+ repos)" },
+};
+
 // Stack technologiczny jako MECHANICZNA KLAWIATURA 60%. Pełny layout klawiatury:
 // klawisze specjalne (Esc/Tab/Caps/Shift/Ctrl/Enter/Backspace/Space…) o własnych
 // szerokościach + keycapy skillowe z legendami technologii. Każdy rząd ma tę samą
@@ -261,26 +298,34 @@ export default function TechKeyboard() {
           {tr("przesuń, by zobaczyć całość", "swipe to see all")}
         </div>
 
-        {/* Etykieta najechanej technologii (poza obszarem scrolla — zawsze wyśrodkowana) */}
-        <div className="pointer-events-none mt-5 sm:mt-7 flex h-8 items-center justify-center">
+        {/* Etykieta najechanej technologii (poza obszarem scrolla — zawsze wyśrodkowana).
+            Druga linia: w jakim projekcie i do czego realnie tę technologię używam. */}
+        <div className="pointer-events-none mt-5 sm:mt-7 flex min-h-[4.25rem] items-start justify-center px-4">
             <motion.div
               initial={false}
               animate={{ opacity: hover ? 1 : 0, y: hover ? 0 : 6 }}
               transition={{ duration: 0.18 }}
-              className="flex items-center gap-2.5 rounded-full border border-terminal-border bg-terminal-bg/95 px-4 py-1.5 shadow-panel backdrop-blur-sm"
+              className="flex max-w-md flex-col items-center gap-1.5 rounded-2xl border border-terminal-border bg-terminal-bg/95 px-4 py-2.5 text-center shadow-panel backdrop-blur-sm"
             >
-              <span
-                className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: shown?.color ?? "transparent" }}
-              />
-              <span
-                className="font-mono text-sm font-bold"
-                style={{ color: shown?.color ?? "transparent" }}
-              >
-                {shown?.name ?? "—"}
-              </span>
-              <span className="font-mono text-[0.65rem] uppercase tracking-widest text-terminal-text">
-                {shown ? catLabel(shown.cat) : ""}
+              <div className="flex items-center gap-2.5">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: shown?.color ?? "transparent" }}
+                />
+                <span
+                  className="font-mono text-sm font-bold"
+                  style={{ color: shown?.color ?? "transparent" }}
+                >
+                  {shown?.name ?? "—"}
+                </span>
+                <span className="font-mono text-[0.65rem] uppercase tracking-widest text-terminal-text">
+                  {shown ? catLabel(shown.cat) : ""}
+                </span>
+              </div>
+              <span className="font-mono text-[0.7rem] leading-snug text-terminal-text/80">
+                {shown && USE[shown.name]
+                  ? tr(USE[shown.name].pl, USE[shown.name].en)
+                  : ""}
               </span>
             </motion.div>
           </div>

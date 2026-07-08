@@ -33,7 +33,7 @@ export default function Home() {
       <ScrollStory />
 
       {/* Main Content Container */}
-      <main className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-28 pb-12 sm:pb-24 flex flex-col gap-20 sm:gap-28 lg:gap-32">
+      <main className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-28 pb-12 sm:pb-24 flex flex-col gap-14 sm:gap-20 lg:gap-24">
         <Hero />
         <TechKeyboard />
         <Profile />

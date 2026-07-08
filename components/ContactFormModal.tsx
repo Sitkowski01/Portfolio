@@ -8,6 +8,11 @@ import { useTr } from "./i18n";
 
 type Status = "idle" | "sending" | "ok" | "error";
 
+// Web3Forms na darmowym planie przyjmuje tylko żądania z przeglądarki (nie z serwera),
+// dlatego wysyłamy bezpośrednio stąd. Klucz jest publicznym identyfikatorem
+// (chroni go allowlist domen w panelu Web3Forms).
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
 export default function ContactFormModal() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -49,30 +54,56 @@ export default function ContactFormModal() {
     e.preventDefault();
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const payload = {
-      name: String(fd.get("name") || ""),
-      email: String(fd.get("email") || ""),
-      message: String(fd.get("message") || ""),
-      company: String(fd.get("company") || ""), // honeypot
-    };
+    const name = String(fd.get("name") || "").trim();
+    const email = String(fd.get("email") || "").trim();
+    const message = String(fd.get("message") || "").trim();
+    const company = String(fd.get("company") || ""); // honeypot
+
+    // Bot wypełnił ukryte pole — udajemy sukces, nic nie wysyłamy.
+    if (company) {
+      setStatus("ok");
+      form.reset();
+      return;
+    }
+
+    if (!WEB3FORMS_KEY) {
+      setStatus("error");
+      setError(
+        tr(
+          "Formularz nie jest jeszcze skonfigurowany.",
+          "The form isn't configured yet."
+        )
+      );
+      return;
+    }
 
     setStatus("sending");
     setError("");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Portfolio: wiadomość od ${name}`,
+          from_name: "Portfolio — kontakt",
+          replyto: email,
+          name,
+          email,
+          message,
+        }),
       });
-      const json = await res.json().catch(() => ({}));
-      if (res.ok && json.ok) {
+      const json = (await res.json().catch(() => ({}))) as { success?: boolean };
+      if (res.ok && json.success) {
         setStatus("ok");
         form.reset();
       } else {
         setStatus("error");
         setError(
-          json.error ||
-            tr("Nie udało się wysłać. Spróbuj ponownie.", "Couldn't send. Please try again.")
+          tr("Nie udało się wysłać. Spróbuj ponownie.", "Couldn't send. Please try again.")
         );
       }
     } catch {
