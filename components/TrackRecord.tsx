@@ -90,7 +90,9 @@ const ENTRIES: Entry[] = [
     role: { pl: "Specjalista IT", en: "IT Specialist" },
     org: { pl: "Leroy Merlin", en: "Leroy Merlin" },
     points: [
-      { pl: "Wsparcie techniczne oraz utrzymanie sprzętu i oprogramowania", en: "Technical support and maintenance of hardware and software" },
+      { pl: "Wsparcie techniczne i utrzymanie sprzętu oraz oprogramowania; obsługa zgłoszeń w systemach ticketowych (Jira, ServiceNow)", en: "Technical support and maintenance of hardware and software; handling tickets in ITSM systems (Jira, ServiceNow)" },
+      { pl: "Sieć: wymiana firewalli, odblokowywanie portów, praca na switchach, wyszukiwanie i krosowanie portów", en: "Networking: swapping firewalls, unblocking ports, working on switches, tracing and patching ports" },
+      { pl: "Administracja w Bash i PowerShell: restart systemów kasowych, przepinanie drukarek, automatyzacja rutynowych zadań", en: "Bash and PowerShell administration: restarting POS systems, reconnecting printers, automating routine tasks" },
       { pl: "Diagnostyka i rozwiązywanie problemów IT użytkowników", en: "Diagnosing and resolving users' IT issues" },
       { pl: "Równolegle: budowa własnych produktów web/mobile/AI (portfolio obok)", en: "In parallel: building my own web/mobile/AI products (this portfolio)" },
     ],

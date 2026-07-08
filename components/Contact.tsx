@@ -1,6 +1,6 @@
 "use client";
 
-import { GithubIcon, LinkedinIcon, DownloadIcon } from "./Icons";
+import { GithubIcon, LinkedinIcon, EyeIcon } from "./Icons";
 import OrderTicket from "./OrderTicket";
 import ContactFormModal from "./ContactFormModal";
 import { useTr } from "./i18n";
@@ -59,7 +59,10 @@ export default function Contact() {
                 </span>
               </p>
 
-              <div className="flex flex-col sm:flex-row flex-wrap gap-3 font-mono text-sm uppercase tracking-wider">
+              <div
+                id="contact-cta"
+                className="flex flex-col sm:flex-row flex-wrap gap-3 font-mono text-sm uppercase tracking-wider scroll-mt-28"
+              >
                 <ContactFormModal />
                 <a
                   href={LINKEDIN_URL}
@@ -79,10 +82,11 @@ export default function Contact() {
                 </a>
                 <a
                   href="/cv.pdf"
-                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-terminal-bg text-terminal-highlight border border-terminal-border rounded hover:border-bull hover:text-bull hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
-                  <DownloadIcon className="w-5 h-5" /> {tr("Pobierz CV", "Download CV")}
+                  <EyeIcon className="w-5 h-5" /> {tr("Wyświetl CV", "View CV")}
                 </a>
               </div>
             </div>

@@ -83,8 +83,8 @@ const COMMANDS: Command[] = [
   {
     keyword: "contact",
     label: { pl: "Kontakt", en: "Contact" },
-    hint: "goto #contact",
-    action: () => scrollTo("contact"),
+    hint: "goto #contact-cta",
+    action: () => scrollTo("contact-cta"),
   },
   {
     keyword: "email",
@@ -96,7 +96,7 @@ const COMMANDS: Command[] = [
   },
   {
     keyword: "cv",
-    label: { pl: "Pobierz CV", en: "Download CV" },
+    label: { pl: "Wyświetl CV", en: "View CV" },
     hint: "open /cv.pdf",
     action: () => {
       window.open("/cv.pdf", "_blank");
@@ -187,7 +187,7 @@ export default function CommandPalette() {
       {/* Hint chip — discoverability */}
       <button
         onClick={openPalette}
-        className="fixed bottom-5 right-5 z-40 glass-panel border border-terminal-border rounded-lg px-3.5 py-2.5 font-mono text-xs text-terminal-text hover:text-bull hover:border-bull/50 transition-colors flex items-center gap-2 cursor-pointer shadow-panel"
+        className="fixed bottom-5 right-5 z-40 glass-panel border border-terminal-border rounded-lg h-9 px-3.5 font-mono text-xs text-terminal-text hover:text-bull hover:border-bull/50 transition-colors flex items-center gap-2 cursor-pointer shadow-panel"
         aria-label={
           isTouch
             ? tr("Otwórz menu nawigacji", "Open navigation menu")

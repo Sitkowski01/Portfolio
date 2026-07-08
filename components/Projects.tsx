@@ -111,9 +111,9 @@ const projects: Project[] = [
       "/projects/magisterka/krok5.webp",
       "/projects/magisterka/wynik_pomaranczowy.webp",
     ],
-    demoUrl: "#",
+    demoUrl: "/projects/magisterka/praca_dyplomowa.pdf",
     githubUrl: "https://github.com/Sitkowski01/magisterka",
-    demoLabel: { pl: "Praca magisterska", en: "Master's thesis" },
+    demoLabel: { pl: "Praca dyplomowa (PDF)", en: "Diploma thesis (PDF)" },
   },
   {
     ticker: "$SPLIT",
@@ -146,9 +146,9 @@ const projects: Project[] = [
       "/projects/split/shot-8.webp",
       "/projects/split/shot-9.webp",
     ],
-    demoUrl: "#",
+    demoUrl: "/projects/split/splitdebill_opis_aplikacji.pdf",
     githubUrl: "https://github.com/Sitkowski01/SplitDeBill",
-    demoLabel: { pl: "W trakcie", en: "In progress" },
+    demoLabel: { pl: "Opis aplikacji (PDF)", en: "App overview (PDF)" },
   },
   {
     ticker: "$EXPLORE",
