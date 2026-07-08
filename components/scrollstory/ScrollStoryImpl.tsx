@@ -83,6 +83,7 @@ export default function ScrollStoryImpl() {
   const flashRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
+  const skipRef = useRef<HTMLButtonElement>(null);
 
   // Postęp scrolla współdzielony z Avatarem (czytany w useFrame R3F).
   const progress = useRef(0);
@@ -115,6 +116,16 @@ export default function ScrollStoryImpl() {
       if (document.hidden) return;
 
       const rect = section.getBoundingClientRect();
+
+      // Przycisk „Pomiń intro" jest fixed (widoczny od startu także na mobile,
+      // gdzie absolute w kontenerze 100vh chował się pod paskiem przeglądarki).
+      // Pokazujemy go, dopóki intro wypełnia viewport; chowamy przy wyjściu.
+      if (skipRef.current) {
+        const introHere = rect.top <= 1 && rect.bottom > window.innerHeight + 1;
+        skipRef.current.style.opacity = introHere ? "1" : "0";
+        skipRef.current.style.pointerEvents = introHere ? "auto" : "none";
+      }
+
       if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
       const scrollable = rect.height - window.innerHeight;
@@ -352,13 +363,14 @@ export default function ScrollStoryImpl() {
             Skok natychmiastowy: html ma scroll-smooth, więc zwykła kotwica
             przewijałaby płynnie przez całe 450vh scrollytellingu. */}
         <button
+          ref={skipRef}
           type="button"
           onClick={() =>
             document
               .getElementById("hero")
               ?.scrollIntoView({ behavior: "instant" })
           }
-          className="absolute bottom-5 left-5 z-40 glass-panel border border-terminal-border rounded-lg px-3.5 py-2.5 font-mono text-xs uppercase tracking-wider text-terminal-text hover:text-bull hover:border-bull/50 transition-colors flex items-center gap-2 shadow-panel cursor-pointer"
+          className="fixed bottom-5 left-5 z-40 glass-panel border border-terminal-border rounded-lg h-9 px-3.5 font-mono text-xs uppercase tracking-wider text-terminal-text hover:text-bull hover:border-bull/50 transition-[color,border-color,opacity] flex items-center gap-2 shadow-panel cursor-pointer"
         >
           {tr("Pomiń intro", "Skip intro")}
           <span aria-hidden="true">↓</span>

@@ -16,8 +16,8 @@ type Rating = {
 // Wyróżniona opinia — rozciągnięta na całą szerokość (lead analyst).
 const FEATURED: Rating = {
   quote: {
-    pl: "Wszystko dowoził na czas i z ogromną ambicją. Temat pracy magisterskiej zamknęliśmy sporo przed terminem — współpraca z Mikołajem była po prostu przyjemnością.",
-    en: "He delivered everything on time and with huge ambition. We wrapped up the master's thesis well ahead of schedule — working with Mikołaj was simply a pleasure.",
+    pl: "Wszystko dowoził na czas i z ogromną ambicją. Temat pracy magisterskiej zamknęliśmy sporo przed terminem, a współpraca z Mikołajem była po prostu przyjemnością.",
+    en: "He delivered everything on time and with huge ambition. We wrapped up the master's thesis well ahead of schedule, and working with Mikołaj was simply a pleasure.",
   },
   author: { pl: "Anna Lewandowska", en: "Anna Lewandowska" },
   role: { pl: "Promotor pracy mgr · ZUT w Szczecinie", en: "Thesis supervisor · ZUT in Szczecin" },
@@ -27,8 +27,8 @@ const FEATURED: Rating = {
 const RATINGS: Rating[] = [
   {
     quote: {
-      pl: "Wszedł w moje buty lepiej, niż się spodziewałem — radzi sobie świetnie. Charyzma, wiedza i tempo nauki robią wrażenie, a do tego nigdy nie zostawia nikogo z problemem: zawsze pomoże.",
-      en: "He stepped into my shoes better than I expected — he's doing great. His charisma, knowledge and learning speed are impressive, and he never leaves anyone stuck with a problem: he'll always help.",
+      pl: "Wszedł w moje buty lepiej, niż się spodziewałem, i radzi sobie świetnie. Charyzma, wiedza i tempo nauki robią wrażenie, a do tego nigdy nie zostawia nikogo z problemem: zawsze pomoże.",
+      en: "He stepped into my shoes better than I expected, and he's doing great. His charisma, knowledge and learning speed are impressive, and he never leaves anyone stuck with a problem: he'll always help.",
     },
     author: { pl: "Grzegorz", en: "Grzegorz" },
     role: { pl: "Przełożony · Leroy Merlin", en: "Manager · Leroy Merlin" },
@@ -36,8 +36,8 @@ const RATINGS: Rating[] = [
   },
   {
     quote: {
-      pl: "Jak już się za coś weźmie, nie odpuszcza — doprowadza temat do końca, nawet kiedy robi się trudno. Na takich ludzi się liczy.",
-      en: "Once he takes something on, he doesn't let go — he sees it through to the end, even when it gets hard. Those are the people you count on.",
+      pl: "Jak już się za coś weźmie, nie odpuszcza, doprowadza temat do końca, nawet kiedy robi się trudno. Na takich ludzi się liczy.",
+      en: "Once he takes something on, he doesn't let go, he sees it through to the end, even when it gets hard. Those are the people you count on.",
     },
     author: { pl: "Jakub Wasilewski", en: "Jakub Wasilewski" },
     role: { pl: "Zespół IT", en: "IT team" },
@@ -45,8 +45,8 @@ const RATINGS: Rating[] = [
   },
   {
     quote: {
-      pl: "Profesjonalne podejście do klienta, solidna wiedza techniczna i — co rzadkie — poczucie stylu. Robotę oddawał dopracowaną.",
-      en: "A professional approach to the client, solid technical knowledge and — rare — a sense of style. He delivered polished work.",
+      pl: "Profesjonalne podejście do klienta, solidna wiedza techniczna i rzadkie poczucie stylu. Robotę oddawał dopracowaną.",
+      en: "A professional approach to the client, solid technical knowledge and a rare sense of style. He delivered polished work.",
     },
     author: { pl: "Filip Smolczyński", en: "Filip Smolczyński" },
     role: { pl: "Raven IT", en: "Raven IT" },
@@ -54,8 +54,8 @@ const RATINGS: Rating[] = [
   },
   {
     quote: {
-      pl: "Zawsze punktualny, głodny wiedzy i chętny do pracy. Nowe rzeczy chłonął błyskawicznie — można było na nim polegać w zadaniach sprintowych.",
-      en: "Always punctual, hungry for knowledge and eager to work. He picked up new things in a flash — you could rely on him for sprint tasks.",
+      pl: "Zawsze punktualny, głodny wiedzy i chętny do pracy. Nowe rzeczy chłonął błyskawicznie, można było na nim polegać w zadaniach sprintowych.",
+      en: "Always punctual, hungry for knowledge and eager to work. He picked up new things in a flash, you could rely on him for sprint tasks.",
     },
     author: { pl: "Tomasz Zieliński", en: "Tomasz Zieliński" },
     role: { pl: "Mentor zespołu · GlobalLogic", en: "Team mentor · GlobalLogic" },

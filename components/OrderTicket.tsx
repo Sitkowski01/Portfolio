@@ -8,11 +8,11 @@ const TICKET = {
   asset: "$MIKOLAJ",
   side: "BUY",
   rows: [
-    { k: { pl: "Rola", en: "Role" }, v: { pl: "Fullstack Developer — Web & Mobile", en: "Fullstack Developer — Web & Mobile" } },
-    { k: { pl: "Stack", en: "Stack" }, v: { pl: "React · Angular · Next.js · Node · TS", en: "React · Angular · Next.js · Node · TS" } },
-    { k: { pl: "Tryb", en: "Mode" }, v: { pl: "Zdalnie / Hybryda / Szczecin", en: "Remote / Hybrid / Szczecin" } },
+    { k: { pl: "Rola", en: "Role" }, v: { pl: "Fullstack Developer · Web & Mobile", en: "Fullstack Developer · Web & Mobile" } },
+    { k: { pl: "Stack", en: "Stack" }, v: { pl: "React · React Native · Next.js · Node", en: "React · React Native · Next.js · Node" } },
+    { k: { pl: "Tryb", en: "Mode" }, v: { pl: "Zdalnie · Hybryda · Szczecin / Poznań", en: "Remote · Hybrid · Szczecin / Poznań" } },
     { k: { pl: "Typ", en: "Type" }, v: { pl: "Etat · B2B · Kontrakt", en: "Full-time · B2B · Contract" } },
-    { k: { pl: "Języki", en: "Languages" }, v: { pl: "PL · EN (C1)", en: "PL · EN (C1)" } },
+    { k: { pl: "Języki", en: "Languages" }, v: { pl: "PL · EN (C1) · ES (A1)", en: "PL · EN (C1) · ES (A1)" } },
     { k: { pl: "Dostępność", en: "Availability" }, v: { pl: "Otwarty na rozmowy", en: "Open to talk" } },
   ],
 };
@@ -46,7 +46,7 @@ export default function OrderTicket() {
             <span className="text-[0.6rem] sm:text-[0.65rem] uppercase tracking-widest text-terminal-text/60 shrink-0">
               {tr(r.k.pl, r.k.en)}
             </span>
-            <span className="text-[0.8rem] sm:text-sm text-terminal-highlight text-left sm:text-right leading-snug">
+            <span className="text-[0.72rem] sm:text-sm text-terminal-highlight text-left sm:text-right leading-snug">
               {tr(r.v.pl, r.v.en)}
             </span>
           </div>
