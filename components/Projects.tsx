@@ -68,9 +68,9 @@ const projects: Project[] = [
       "/projects/scan/phone-7.webp",
       "/projects/scan/phone-8.webp",
     ],
-    demoUrl: "#",
+    demoUrl: "https://play.google.com/store/apps/details?id=com.skanerbiznes.app",
     githubUrl: "https://github.com/Sitkowski01/SkanerBiznes",
-    demoLabel: { pl: "Wkrótce w Google Play", en: "Coming to Google Play" },
+    demoLabel: { pl: "Pobierz z Google Play", en: "Get it on Google Play" },
   },
   {
     // Screeny: wrzuć do public/projects/magisterka/ i dopisz ścieżki do `images`
