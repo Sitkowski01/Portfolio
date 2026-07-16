@@ -140,10 +140,7 @@ export default function ScrollStoryImpl() {
         setShowAvatar(true);
       }
 
-      // +0.5: scena 1 wyśrodkowana już na p=0 (górze). Dzięki temu kotwice scen
-    // wypadają równo co 1/N i pierwszy swipe pokonuje 1 scenę, nie 1,5.
-    // Musi być zgodne z SHIFT w buildCaptions (scenes.ts).
-    const local = smooth * SCENE_COUNT + 0.5;
+      const local = smooth * SCENE_COUNT;
 
       // Tła — crossfade; wideo dodatkowo play/pause (oszczędność dekodera).
       mediaRefs.current.forEach((el, i) => {
@@ -210,8 +207,9 @@ export default function ScrollStoryImpl() {
   // ── Przejęcie gestu na dotyku: 1 swipe = maks. 1 scena ─────────────────────
   // Nawet długie sceny (150vh) nie powstrzymywały mocnego flicka — momentum
   // przelatywał przez całe intro. Tu blokujemy natywny scroll wewnątrz intro i
-  // sami animujemy dokładnie do sąsiedniej sceny. Na krańcach (scena 0 w górę /
-  // ostatnia w dół) NIE blokujemy — scroll natywny wypuszcza z intro do Hero.
+  // sami animujemy dokładnie do sąsiedniego środka sceny. Na krańcach (ekran
+  // startowy w górę / ostatnia scena w dół) NIE blokujemy — scroll natywny
+  // wypuszcza z intro (nad intro lub do Hero).
   useEffect(() => {
     if (mode !== "3d" || typeof window === "undefined") return;
     if (!window.matchMedia("(pointer: coarse)").matches) return; // tylko dotyk
@@ -226,16 +224,17 @@ export default function ScrollStoryImpl() {
     const scrollableOf = (r: DOMRect) => r.height - window.innerHeight;
     const pinned = (r: DOMRect) =>
       r.top <= 1 && r.bottom >= window.innerHeight - 1;
-    const indexAt = (r: DOMRect) => {
+    // Pozycja w „środkach scen": c=i, gdy scena i jest wyśrodkowana. Ekran
+    // startowy (p=0, tylko tło sceny 1 + podpowiedź „Scrolluj") to c=-0.5.
+    const centerFrac = (r: DOMRect) => {
       const s = scrollableOf(r);
       const p = s > 0 ? clamp01(-r.top / s) : 0;
-      return Math.max(0, Math.min(SCENE_COUNT - 1, Math.round(p * SCENE_COUNT)));
+      return p * SCENE_COUNT - 0.5;
     };
-    // Po przesunięciu mapowania (+0.5) scena i „siedzi" równo na p = i/N —
-    // scena 1 na górze (p=0), kotwice co 1/N, jednakowe skoki.
+    // Scena i jest wyśrodkowana przy p=(i+0.5)/N (środek jej crossfade).
     const scrollTopForScene = (i: number, r: DOMRect) => {
       const sectionTop = window.scrollY + r.top;
-      return sectionTop + (i / SCENE_COUNT) * scrollableOf(r);
+      return sectionTop + ((i + 0.5) / SCENE_COUNT) * scrollableOf(r);
     };
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -273,8 +272,13 @@ export default function ScrollStoryImpl() {
       // Niski próg (10px): decyzję podejmujemy już na starcie gestu, zanim iOS
       // „zacommituje" go do natywnego scrolla i zignoruje późniejszy preventDefault.
       if (Math.abs(dy) < 10) return;
-      const dir = dy > 0 ? 1 : -1;
-      const targetI = indexAt(r) + dir;
+      const c = centerFrac(r);
+      const EPS = 1e-3;
+      // Następny/poprzedni środek sceny względem AKTUALNEJ pozycji (nie
+      // zaokrąglonej do najbliższej sceny) — z ekranu startowego (c=-0.5) swipe
+      // w dół celuje w środek sceny 1 (i=0), a nie przeskakuje do sceny 2.
+      const targetI =
+        dy > 0 ? Math.floor(c + EPS) + 1 : Math.ceil(c - EPS) - 1;
       if (targetI < 0 || targetI >= SCENE_COUNT) return; // kraniec → puść natywnie
       e.preventDefault();
       handled = true;
