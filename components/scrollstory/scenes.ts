@@ -161,13 +161,20 @@ export type Caption = CaptionData & {
 export function buildCaptions(): Caption[] {
   const out: Caption[] = [];
   const span = 1 / SCENE_COUNT;
+  // Przesunięcie o pół sceny w górę: scena 1 „siedzi" dokładnie na p=0 (górze),
+  // dzięki czemu kotwice są równo co 1/N i pierwszy swipe pokonuje jedną scenę,
+  // nie 1,5. Musi być zgodne z `local = smooth*N + 0.5` w ScrollStoryImpl.
+  const SHIFT = span / 2;
   SCENES.forEach((scene, i) => {
     const start = i * span;
     const n = scene.captions.length;
     scene.captions.forEach((c, j) => {
       out.push({
         ...c,
-        range: [start + (span * j) / n, start + (span * (j + 1)) / n],
+        range: [
+          start + (span * j) / n - SHIFT,
+          start + (span * (j + 1)) / n - SHIFT,
+        ],
         sceneLabel: scene.label,
         sceneId: scene.id,
       });
