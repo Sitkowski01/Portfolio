@@ -13,12 +13,12 @@ export default function Contact() {
   const tr = useTr();
   return (
     <section id="contact" className="reveal pb-4 sm:pb-24">
-      <div className="glass-panel border border-terminal-border rounded-2xl p-8 md:p-14 relative overflow-hidden">
+      <div className="glass-panel border border-terminal-border rounded-xl sm:rounded-2xl p-5 sm:p-8 md:p-14 relative overflow-hidden">
         {/* Abstract BG element */}
         <div className="absolute inset-0 bg-gradient-to-b from-bull/5 to-transparent pointer-events-none"></div>
 
         <div className="relative z-10">
-          <div className="font-mono text-bull text-sm uppercase tracking-wider mb-8 flex items-center gap-2.5">
+          <div className="font-mono text-bull text-sm uppercase tracking-wider mb-6 sm:mb-8 flex items-center gap-2.5">
             <span
               className="inline-block w-2 h-2 rounded-sm bg-bull shadow-neon-green"
               aria-hidden="true"
@@ -26,7 +26,7 @@ export default function Contact() {
             {tr("Relacje inwestorskie", "Investor Relations")}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
             {/* Lewa: order ticket (Position Open) */}
             <div data-particle-anchor="contact-ticket">
               <OrderTicket />
@@ -81,7 +81,7 @@ export default function Contact() {
                   <GithubIcon className="w-5 h-5" /> GitHub
                 </a>
                 <a
-                  href="/cv.pdf"
+                  href="/CV_Mikołaj_Sitek.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-terminal-bg text-terminal-highlight border border-terminal-border rounded hover:border-bull hover:text-bull hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
