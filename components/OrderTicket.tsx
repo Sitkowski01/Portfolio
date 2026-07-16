@@ -41,12 +41,18 @@ export default function OrderTicket() {
         {TICKET.rows.map((r) => (
           <div
             key={r.k.pl}
-            className="flex flex-col items-start gap-0.5 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-3 hover:bg-white/[0.02] transition-colors"
+            className="flex flex-col items-start gap-1.5 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-3 hover:bg-white/[0.02] transition-colors"
           >
-            <span className="text-[0.6rem] sm:text-[0.65rem] uppercase tracking-widest text-terminal-text/60 shrink-0">
+            {/* Etykieta: na telefonie z zielonym akcentem, żeby wiersze
+                oddychały i były od siebie wyraźnie odróżnialne. */}
+            <span className="flex items-center gap-1.5 text-[0.65rem] sm:text-[0.65rem] uppercase tracking-widest text-terminal-text/60 shrink-0">
+              <span
+                className="w-1 h-1 rounded-full bg-bull/60 sm:hidden"
+                aria-hidden="true"
+              />
               {tr(r.k.pl, r.k.en)}
             </span>
-            <span className="text-[0.72rem] sm:text-sm text-terminal-highlight text-left sm:text-right leading-snug">
+            <span className="text-[0.8rem] sm:text-sm text-terminal-highlight text-left sm:text-right leading-relaxed pl-2.5 sm:pl-0">
               {tr(r.v.pl, r.v.en)}
             </span>
           </div>
