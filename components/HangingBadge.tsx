@@ -106,12 +106,34 @@ export default function HangingBadge() {
       const angle = Math.atan2(pos.y - anchorY, pos.x - anchorX) - Math.PI / 2;
       const swing = isDragging ? 0 : vel.x * 0.04;
 
-      badge.style.left = `${pos.x}px`;
-      badge.style.top = `${pos.y}px`;
-      badge.style.transform = `translate(-50%, 0) rotate(${angle + swing}rad)`;
+      const applyTransform = () => {
+        const a = Math.atan2(pos.y - anchorY, pos.x - anchorX) - Math.PI / 2;
+        badge.style.left = `${pos.x}px`;
+        badge.style.top = `${pos.y}px`;
+        badge.style.transform = `translate(-50%, 0) rotate(${a + swing}rad)`;
+        svgLine.setAttribute("x2", String(pos.x));
+        svgLine.setAttribute("y2", String(pos.y));
+      };
+      applyTransform();
 
-      svgLine.setAttribute("x2", String(pos.x));
-      svgLine.setAttribute("y2", String(pos.y));
+      // Korekta na podstawie RZECZYWISTEGO (już obróconego) prostokąta karty:
+      // gdy jej róg wystaje poza ekran, dociągamy pos.x z powrotem. Dzięki temu
+      // karta nie tworzy poziomego overflow (na mobile to przesuwało widok i
+      // fixed ticker) — a „ściana" jest tylko na prawdziwej krawędzi ekranu,
+      // nie w środku (jak przy CSS overflow-clip na sekcji). Liczymy tylko gdy
+      // karta jest realnie odchylona — w spoczynku nie ruszamy layoutu.
+      if (isDragging || Math.abs(pos.x - anchorX) > 5 || Math.abs(vel.x) > 0.1) {
+        const bb = badge.getBoundingClientRect();
+        const M = 2;
+        let fix = 0;
+        if (bb.right > window.innerWidth - M) fix = window.innerWidth - M - bb.right;
+        else if (bb.left < M) fix = M - bb.left;
+        if (fix !== 0) {
+          pos.x += fix;
+          vel.x = 0;
+          applyTransform();
+        }
+      }
 
       rafId = requestAnimationFrame(updatePhysics);
     };
