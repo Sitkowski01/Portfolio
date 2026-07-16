@@ -40,13 +40,13 @@
   }
 }
 
-/* Twarda blokada poziomego „pana" widoku. Na telefonie samo overflow-x:hidden
-   na <body> nie wystarczało — przewijanie w bok dzieje się na <html>, więc gdy
-   coś wystawało poza ekran (np. przeciągnięty/obrócony badge na sznurku),
-   przeglądarka przesuwała widok, a fixed ticker „jechał" razem z nim.
-   `clip` (nie `hidden`) NIE tworzy kontenera scrolla → position:sticky w
-   scrollytellingu działa bez zmian. */
-html {
+/* Badge na sznurku (Profil) po przeciągnięciu w bok obraca się i jego róg
+   wystawał poza ekran → poziomy overflow → na telefonie widok przesuwał się
+   w bok, a fixed ticker „jechał" razem z nim. Clipujemy overflow TYLKO na
+   sekcji Profilu — karta zostaje odcięta na krawędzi sekcji, nic nie przesuwa
+   widoku. Świadomie NIE ruszamy <html>/<body> (to psuło sticky w intro).
+   `clip` (nie `hidden`) nie tworzy kontenera scrolla. */
+#profile {
   overflow-x: clip;
 }
 
