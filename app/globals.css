@@ -567,6 +567,28 @@ body {
   letter-spacing: -0.015em;
 }
 
+/* ── Scroll-snap intro (tylko dotyk) ──────────────────────────────────────
+   Na telefonie mocny „flick" ma duży momentum i przelatywał przez wszystkie
+   sceny naraz. Punkty .scene-snap (wyśrodkowane na każdej scenie) + snap-stop
+   ograniczają jeden gest do jednej sceny. `proximity` (nie `mandatory`), żeby
+   nie uwięzić scrolla przy wyjściu z intro do Hero. Desktop (kółko/trackpad =
+   pointer:fine) zostaje bez zmian — tam scroll jest precyzyjny. */
+.scene-snap {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+}
+@media (pointer: coarse) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  .scene-snap {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
+
 /* Spójny pierścień fokusu dla nawigacji klawiaturą (a11y, priorytet #1) */
 a:focus-visible,
 button:focus-visible,
