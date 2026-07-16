@@ -18,13 +18,6 @@ export default function HangingBadge() {
     // Bez fizyki przy reduced motion — badge wisi statycznie
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Na DOTYKU badge wisi statycznie (bez przeciągania i fizyki). Karta
-    // 220×~300px po obróceniu nie mieści się na wąskim ekranie bez wystawania
-    // poza viewport — to tworzyło poziomy overflow, przez który fixed ticker
-    // „jechał" razem z ruchem karty. Przeciąganie na sznurku zostaje jako
-    // interakcja myszką na desktopie; na telefonie i tak było toporne.
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-
     let isDragging = false;
     const anchorX = 140; // Center of the 280px wrapper
     const anchorY = 0; // Top of the wrapper
@@ -160,8 +153,7 @@ export default function HangingBadge() {
           style={{
             transformOrigin: "50% 0%",
             transform: "translate(-50%, 0)",
-            // Bez touch-action:none — na telefonie karta nie jest przeciągana
-            // (patrz useEffect), więc dotknięcie jej ma normalnie scrollować.
+            touchAction: "none", // przeciąganie karty na dotyku nie scrolluje strony
           }}
         >
           {/* Hole */}

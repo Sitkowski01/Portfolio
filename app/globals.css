@@ -40,6 +40,21 @@
   }
 }
 
+/* Na wąskim DOTYKU (telefon) przeciągana karta-badge (Profil) obraca się i jej
+   róg wystawał poza ekran → poziomy overflow → widok przesuwał się w bok, a
+   fixed ticker „jechał" razem z kartą. Clipujemy overflow na <main>, które na
+   telefonie ma pełną szerokość ekranu — karta ucina się dopiero na KRAWĘDZI
+   EKRANU (naturalnie, bez ściany w środku jak przy clipie sekcji). Ograniczone
+   do (max-width:1023px), więc: (a) na desktopie karta buja się swobodnie,
+   (b) na mobile Interests to grid, nie sticky → clip nic nie psuje. Intro
+   (ScrollStory) jest POZA <main>, więc scrollytelling nietknięty. `clip` nie
+   tworzy kontenera scrolla. */
+@media (pointer: coarse) and (max-width: 1023px) {
+  main {
+    overflow-x: clip;
+  }
+}
+
 /* Kotwice — odstęp na sticky ticker przy scrollu do #sekcji */
 section[id] {
   scroll-margin-top: 4.5rem;
