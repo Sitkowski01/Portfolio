@@ -40,16 +40,6 @@
   }
 }
 
-/* Badge na sznurku (Profil) po przeciągnięciu w bok obraca się i jego róg
-   wystawał poza ekran → poziomy overflow → na telefonie widok przesuwał się
-   w bok, a fixed ticker „jechał" razem z nim. Clipujemy overflow TYLKO na
-   sekcji Profilu — karta zostaje odcięta na krawędzi sekcji, nic nie przesuwa
-   widoku. Świadomie NIE ruszamy <html>/<body> (to psuło sticky w intro).
-   `clip` (nie `hidden`) nie tworzy kontenera scrolla. */
-#profile {
-  overflow-x: clip;
-}
-
 /* Kotwice — odstęp na sticky ticker przy scrollu do #sekcji */
 section[id] {
   scroll-margin-top: 4.5rem;
