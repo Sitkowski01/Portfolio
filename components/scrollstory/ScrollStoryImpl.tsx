@@ -204,6 +204,93 @@ export default function ScrollStoryImpl() {
     return () => cancelAnimationFrame(raf);
   }, [mode]);
 
+  // ── Przejęcie gestu na dotyku: 1 swipe = maks. 1 scena ─────────────────────
+  // Nawet długie sceny (150vh) nie powstrzymywały mocnego flicka — momentum
+  // przelatywał przez całe intro. Tu blokujemy natywny scroll wewnątrz intro i
+  // sami animujemy dokładnie do sąsiedniej sceny. Na krańcach (scena 0 w górę /
+  // ostatnia w dół) NIE blokujemy — scroll natywny wypuszcza z intro do Hero.
+  useEffect(() => {
+    if (mode !== "3d" || typeof window === "undefined") return;
+    if (!window.matchMedia("(pointer: coarse)").matches) return; // tylko dotyk
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let animating = false;
+    let startY = 0;
+    let handled = false; // jedna zmiana sceny na gest
+    let tweenRaf = 0;
+
+    const scrollableOf = (r: DOMRect) => r.height - window.innerHeight;
+    const pinned = (r: DOMRect) =>
+      r.top <= 1 && r.bottom >= window.innerHeight - 1;
+    const indexAt = (r: DOMRect) => {
+      const s = scrollableOf(r);
+      const p = s > 0 ? clamp01(-r.top / s) : 0;
+      return Math.max(0, Math.min(SCENE_COUNT - 1, Math.round(p * SCENE_COUNT - 0.5)));
+    };
+    // Scena i „siedzi" przy local = i+0.5 (środek pełnej widoczności crossfade).
+    const scrollTopForScene = (i: number, r: DOMRect) => {
+      const sectionTop = window.scrollY + r.top;
+      return sectionTop + ((i + 0.5) / SCENE_COUNT) * scrollableOf(r);
+    };
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const animateTo = (destY: number) => {
+      animating = true;
+      const fromY = window.scrollY;
+      const dist = destY - fromY;
+      const dur = 480;
+      let t0 = 0;
+      const step = (ts: number) => {
+        if (!t0) t0 = ts;
+        const k = Math.min(1, (ts - t0) / dur);
+        window.scrollTo({
+          top: fromY + dist * easeOutCubic(k),
+          behavior: "instant" as ScrollBehavior,
+        });
+        if (k < 1) tweenRaf = requestAnimationFrame(step);
+        else animating = false;
+      };
+      tweenRaf = requestAnimationFrame(step);
+    };
+
+    const onStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+      handled = false;
+    };
+    const onMove = (e: TouchEvent) => {
+      const r = section.getBoundingClientRect();
+      if (!pinned(r)) return; // poza intro → scroll natywny
+      if (animating || handled) {
+        e.preventDefault(); // zablokuj resztę gestu w trakcie/po zmianie sceny
+        return;
+      }
+      const dy = startY - e.touches[0].clientY; // >0 = swipe w górę = do przodu
+      // Niski próg (10px): decyzję podejmujemy już na starcie gestu, zanim iOS
+      // „zacommituje" go do natywnego scrolla i zignoruje późniejszy preventDefault.
+      if (Math.abs(dy) < 10) return;
+      const dir = dy > 0 ? 1 : -1;
+      const targetI = indexAt(r) + dir;
+      if (targetI < 0 || targetI >= SCENE_COUNT) return; // kraniec → puść natywnie
+      e.preventDefault();
+      handled = true;
+      animateTo(scrollTopForScene(targetI, r));
+    };
+    const onEnd = () => {
+      handled = false;
+    };
+
+    window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchmove", onMove, { passive: false });
+    window.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      cancelAnimationFrame(tweenRaf);
+      window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onEnd);
+    };
+  }, [mode]);
+
   if (mode === "static") return <StaticStory />;
 
   return (
