@@ -140,7 +140,10 @@ export default function ScrollStoryImpl() {
         setShowAvatar(true);
       }
 
-      const local = smooth * SCENE_COUNT;
+      // +0.5: scena 1 wyśrodkowana już na p=0 (górze). Dzięki temu kotwice scen
+    // wypadają równo co 1/N i pierwszy swipe pokonuje 1 scenę, nie 1,5.
+    // Musi być zgodne z SHIFT w buildCaptions (scenes.ts).
+    const local = smooth * SCENE_COUNT + 0.5;
 
       // Tła — crossfade; wideo dodatkowo play/pause (oszczędność dekodera).
       mediaRefs.current.forEach((el, i) => {
@@ -226,12 +229,13 @@ export default function ScrollStoryImpl() {
     const indexAt = (r: DOMRect) => {
       const s = scrollableOf(r);
       const p = s > 0 ? clamp01(-r.top / s) : 0;
-      return Math.max(0, Math.min(SCENE_COUNT - 1, Math.round(p * SCENE_COUNT - 0.5)));
+      return Math.max(0, Math.min(SCENE_COUNT - 1, Math.round(p * SCENE_COUNT)));
     };
-    // Scena i „siedzi" przy local = i+0.5 (środek pełnej widoczności crossfade).
+    // Po przesunięciu mapowania (+0.5) scena i „siedzi" równo na p = i/N —
+    // scena 1 na górze (p=0), kotwice co 1/N, jednakowe skoki.
     const scrollTopForScene = (i: number, r: DOMRect) => {
       const sectionTop = window.scrollY + r.top;
-      return sectionTop + ((i + 0.5) / SCENE_COUNT) * scrollableOf(r);
+      return sectionTop + (i / SCENE_COUNT) * scrollableOf(r);
     };
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
