@@ -51,8 +51,22 @@ export default function HangingBadge() {
       if (!isDragging) return;
       e.preventDefault();
       const rect = badgeWrapper.getBoundingClientRect();
-      pos.x = e.clientX - rect.left - mouseOffset.x;
-      pos.y = e.clientY - rect.top - mouseOffset.y;
+      let nx = e.clientX - rect.left - mouseOffset.x;
+      let ny = e.clientY - rect.top - mouseOffset.y;
+
+      // Ogranicz badge do widocznego ekranu w POZIOMIE. Bez tego można było
+      // wyciągnąć kartę poza viewport → powstawał poziomy overflow, a na mobile
+      // (gdzie tylko <body> ma overflow-x:hidden) przeglądarka przesuwała widok
+      // w bok, przez co fixed ticker „dryfował" razem z przeciąganiem karty.
+      const half = badge.offsetWidth / 2;
+      const minX = half + 4 - rect.left;
+      const maxX = window.innerWidth - half - 4 - rect.left;
+      nx = Math.min(maxX, Math.max(minX, nx));
+      // Pion — trzymaj w obrębie sznurka (bez wyciągania nad kotwicę / za nisko).
+      ny = Math.max(20, Math.min(ny, rect.height - 40));
+
+      pos.x = nx;
+      pos.y = ny;
 
       vel.x = 0;
       vel.y = 0;
