@@ -213,17 +213,24 @@ export default function ScrollStoryImpl() {
       className="relative z-10"
       style={{ height: `${SCENE_COUNT * 75}vh` }}
     >
-      {/* Punkty zaczepienia scroll-snap — po jednym na scenę, wyśrodkowane na
-          jej „pełnej widoczności" (p=(i+0.5)/SCENE_COUNT). Na dotyku ograniczają
-          flick do jednej sceny na gest (patrz globals.css: .scene-snap). Zakres
-          scrolla to wysokość sekcji minus ekran = (75·N − 100)vh. */}
+      {/* Punkty zaczepienia scroll-snap — po jednym na scenę. Na dotyku
+          ograniczają flick do jednej sceny na gest (patrz globals.css:
+          .scene-snap). Zakres scrolla to wysokość sekcji minus ekran =
+          (75·N − 100)vh.
+          Scena 01 jest w pełni widoczna już od samej góry (p=0), więc jej
+          punkt MUSI być na top:0 — inaczej snap-stop zatrzymywał scroll na
+          środku sceny i nie dało się doscrollować do początku. Pozostałe
+          sceny zaczepiamy na środku ich pełnej widoczności (p=(i+0.5)/N). */}
       <div aria-hidden="true" className="absolute inset-x-0 top-0 pointer-events-none">
         {SCENES.map((_, i) => (
           <div
             key={i}
             className="scene-snap"
             style={{
-              top: `${((75 * SCENE_COUNT - 100) * (i + 0.5)) / SCENE_COUNT}vh`,
+              top:
+                i === 0
+                  ? 0
+                  : `${((75 * SCENE_COUNT - 100) * (i + 0.5)) / SCENE_COUNT}vh`,
             }}
           />
         ))}
