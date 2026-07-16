@@ -40,6 +40,16 @@
   }
 }
 
+/* Twarda blokada poziomego „pana" widoku. Na telefonie samo overflow-x:hidden
+   na <body> nie wystarczało — przewijanie w bok dzieje się na <html>, więc gdy
+   coś wystawało poza ekran (np. przeciągnięty/obrócony badge na sznurku),
+   przeglądarka przesuwała widok, a fixed ticker „jechał" razem z nim.
+   `clip` (nie `hidden`) NIE tworzy kontenera scrolla → position:sticky w
+   scrollytellingu działa bez zmian. */
+html {
+  overflow-x: clip;
+}
+
 /* Kotwice — odstęp na sticky ticker przy scrollu do #sekcji */
 section[id] {
   scroll-margin-top: 4.5rem;
