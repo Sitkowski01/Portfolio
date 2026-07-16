@@ -567,18 +567,25 @@ body {
   letter-spacing: -0.015em;
 }
 
-/* ── Długość scrolla intro (responsywna) ──────────────────────────────────
-   Na telefonie momentum „flicka" przelatywał przez wszystkie sceny, bo każda
-   miała tylko 0.75 ekranu (75vh). Wydłużamy scenę na dotyku do ~1.5 ekranu —
-   jeden flick nie zdąży wtedy przewinąć całości, a scroll zostaje swobodny i
-   płynny (bez przejmowania/snapu). Desktop bez zmian: precyzyjny scroll = 75vh.
-   Sekcja intro czyta tę zmienną w calc() wysokości (patrz ScrollStoryImpl). */
-.scene-track {
-  --vh-per-scene: 75;
+/* ── Scroll-snap intro (tylko dotyk) ──────────────────────────────────────
+   Na telefonie mocny „flick" ma duży momentum i przelatywał przez wszystkie
+   sceny naraz. Punkty .scene-snap (wyśrodkowane na każdej scenie) + snap-stop
+   ograniczają jeden gest do jednej sceny. `proximity` (nie `mandatory`), żeby
+   nie uwięzić scrolla przy wyjściu z intro do Hero. Desktop (kółko/trackpad =
+   pointer:fine) zostaje bez zmian — tam scroll jest precyzyjny. */
+.scene-snap {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
 }
 @media (pointer: coarse) {
-  .scene-track {
-    --vh-per-scene: 150;
+  html {
+    scroll-snap-type: y proximity;
+  }
+  .scene-snap {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 }
 
