@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState, type CSSProperties } from "react";
 import * as THREE from "three";
 import { Canvas, invalidate } from "@react-three/fiber";
 import { AvatarController } from "./AvatarController";
@@ -210,32 +210,17 @@ export default function ScrollStoryImpl() {
     <section
       ref={sectionRef}
       id="intro"
-      className="relative z-10"
-      style={{ height: `${SCENE_COUNT * 75}vh` }}
+      className="scene-track relative z-10"
+      // Wysokość = (długość sceny) × (liczba scen). Długość sceny (--vh-per-scene)
+      // jest responsywna: 75vh na desktopie, 150vh na dotyku (patrz globals.css),
+      // żeby na telefonie momentum flicka nie przelatywał przez całe intro.
+      style={
+        {
+          "--scene-count": SCENE_COUNT,
+          height: "calc(var(--vh-per-scene) * var(--scene-count) * 1vh)",
+        } as CSSProperties
+      }
     >
-      {/* Punkty zaczepienia scroll-snap — po jednym na scenę. Na dotyku
-          ograniczają flick do jednej sceny na gest (patrz globals.css:
-          .scene-snap). Zakres scrolla to wysokość sekcji minus ekran =
-          (75·N − 100)vh.
-          Scena 01 jest w pełni widoczna już od samej góry (p=0), więc jej
-          punkt MUSI być na top:0 — inaczej snap-stop zatrzymywał scroll na
-          środku sceny i nie dało się doscrollować do początku. Pozostałe
-          sceny zaczepiamy na środku ich pełnej widoczności (p=(i+0.5)/N). */}
-      <div aria-hidden="true" className="absolute inset-x-0 top-0 pointer-events-none">
-        {SCENES.map((_, i) => (
-          <div
-            key={i}
-            className="scene-snap"
-            style={{
-              top:
-                i === 0
-                  ? 0
-                  : `${((75 * SCENE_COUNT - 100) * (i + 0.5)) / SCENE_COUNT}vh`,
-            }}
-          />
-        ))}
-      </div>
-
       <div
         ref={stickyRef}
         className="sticky top-0 h-screen overflow-hidden bg-terminal-bg"
