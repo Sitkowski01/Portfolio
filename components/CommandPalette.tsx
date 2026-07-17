@@ -27,28 +27,22 @@ const scrollTo = (id: string) => {
 
 const COMMANDS: Command[] = [
   {
-    keyword: "projects",
-    label: { pl: "Zobacz projekty", en: "View projects" },
-    hint: "goto #holdings",
-    action: () => scrollTo("holdings"),
+    keyword: "skills",
+    label: { pl: "Tech Stack / Umiejętności", en: "Tech Stack / Skills" },
+    hint: "goto #keyboard",
+    action: () => scrollTo("keyboard"),
   },
   {
-    keyword: "fundamentals",
-    label: { pl: "Fundamenty / Metryki", en: "Fundamentals / Metrics" },
+    keyword: "profile",
+    label: { pl: "Profil firmy / Fundamenty", en: "Company Profile / Fundamentals" },
     hint: "goto #profile",
     action: () => scrollTo("profile"),
   },
   {
-    keyword: "experience",
-    label: { pl: "Track Record / Doświadczenie", en: "Track Record / Experience" },
-    hint: "goto #track-record",
-    action: () => scrollTo("track-record"),
-  },
-  {
-    keyword: "position",
-    label: { pl: "Position Open / Czego szukam", en: "Position Open / What I want" },
-    hint: "goto #contact",
-    action: () => scrollTo("contact"),
+    keyword: "projects",
+    label: { pl: "Zobacz projekty", en: "View projects" },
+    hint: "goto #holdings",
+    action: () => scrollTo("holdings"),
   },
   {
     keyword: "magisterka",
@@ -57,22 +51,10 @@ const COMMANDS: Command[] = [
     action: () => scrollTo("holdings"),
   },
   {
-    keyword: "skills",
-    label: { pl: "Tech Stack / Umiejętności", en: "Tech Stack / Skills" },
-    hint: "goto #keyboard",
-    action: () => scrollTo("keyboard"),
-  },
-  {
-    keyword: "ratings",
-    label: { pl: "Rekomendacje / Opinie", en: "Recommendations / Reviews" },
-    hint: "goto #ratings",
-    action: () => scrollTo("ratings"),
-  },
-  {
-    keyword: "profile",
-    label: { pl: "Profil firmy", en: "Company Profile" },
-    hint: "goto #profile",
-    action: () => scrollTo("profile"),
+    keyword: "experience",
+    label: { pl: "Track Record / Doświadczenie", en: "Track Record / Experience" },
+    hint: "goto #track-record",
+    action: () => scrollTo("track-record"),
   },
   {
     keyword: "interests",
@@ -81,8 +63,14 @@ const COMMANDS: Command[] = [
     action: () => scrollTo("interests"),
   },
   {
+    keyword: "ratings",
+    label: { pl: "Rekomendacje / Opinie", en: "Recommendations / Reviews" },
+    hint: "goto #ratings",
+    action: () => scrollTo("ratings"),
+  },
+  {
     keyword: "contact",
-    label: { pl: "Kontakt", en: "Contact" },
+    label: { pl: "Kontakt / Czego szukam", en: "Contact / What I want" },
     hint: "goto #contact-cta",
     action: () => scrollTo("contact-cta"),
   },
@@ -97,9 +85,9 @@ const COMMANDS: Command[] = [
   {
     keyword: "cv",
     label: { pl: "Wyświetl CV", en: "View CV" },
-    hint: "open /cv.pdf",
+    hint: "open /CV_Mikołaj_Sitek.pdf",
     action: () => {
-      window.open("/cv.pdf", "_blank");
+      window.open("/CV_Mikołaj_Sitek.pdf", "_blank");
     },
   },
   {
