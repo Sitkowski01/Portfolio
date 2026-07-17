@@ -34,7 +34,7 @@ const COMMANDS: Command[] = [
   },
   {
     keyword: "hero",
-    label: { pl: "Hero / Intro", en: "Hero / Intro" },
+    label: { pl: "Wizytówka", en: "Intro" },
     hint: "goto #hero",
     action: () => scrollTo("hero"),
   },
