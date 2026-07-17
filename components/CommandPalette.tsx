@@ -51,12 +51,6 @@ const COMMANDS: Command[] = [
     action: () => scrollTo("holdings"),
   },
   {
-    keyword: "magisterka",
-    label: { pl: "Praca magisterska / AI triage", en: "Master's thesis / AI triage" },
-    hint: "goto #holdings",
-    action: () => scrollTo("holdings"),
-  },
-  {
     keyword: "experience",
     label: { pl: "Track Record / Doświadczenie", en: "Track Record / Experience" },
     hint: "goto #track-record",
