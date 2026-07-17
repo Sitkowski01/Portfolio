@@ -29,7 +29,7 @@ const COMMANDS: Command[] = [
   {
     keyword: "top",
     label: { pl: "Start / Góra strony", en: "Start / Top" },
-    hint: "goto #hero",
+    hint: "scroll top",
     action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
   },
   {
