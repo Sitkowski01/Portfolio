@@ -27,6 +27,12 @@ const scrollTo = (id: string) => {
 
 const COMMANDS: Command[] = [
   {
+    keyword: "top",
+    label: { pl: "Start / Góra strony", en: "Start / Top" },
+    hint: "goto #hero",
+    action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+  {
     keyword: "skills",
     label: { pl: "Tech Stack / Umiejętności", en: "Tech Stack / Skills" },
     hint: "goto #keyboard",
@@ -89,12 +95,6 @@ const COMMANDS: Command[] = [
     action: () => {
       window.open("/CV_Mikołaj_Sitek.pdf", "_blank");
     },
-  },
-  {
-    keyword: "top",
-    label: { pl: "Wróć na górę", en: "Back to top" },
-    hint: "goto #hero",
-    action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
   },
 ];
 
