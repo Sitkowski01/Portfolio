@@ -33,6 +33,12 @@ const COMMANDS: Command[] = [
     action: () => window.scrollTo({ top: 0, behavior: "smooth" }),
   },
   {
+    keyword: "hero",
+    label: { pl: "Hero / Intro", en: "Hero / Intro" },
+    hint: "goto #hero",
+    action: () => scrollTo("hero"),
+  },
+  {
     keyword: "skills",
     label: { pl: "Tech Stack / Umiejętności", en: "Tech Stack / Skills" },
     hint: "goto #keyboard",
