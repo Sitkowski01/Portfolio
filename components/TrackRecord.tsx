@@ -80,11 +80,28 @@ type Entry = {
   role: Loc;
   org: Loc;
   points: Loc[];
+  links?: { label: string; href: string }[];
   tag: "now" | "past" | "edu";
   icon: React.ReactNode;
 };
 
 const ENTRIES: Entry[] = [
+  {
+    period: { pl: "kwiecień 2026 — teraz", en: "April 2026 — now" },
+    role: { pl: "Web Developer · Freelancer", en: "Web Developer · Freelancer" },
+    org: { pl: "mjgweb.pl · zespół Mikołaj / Jakub / Gracjan", en: "mjgweb.pl · Mikołaj / Jakub / Gracjan team" },
+    points: [
+      { pl: "Strony internetowe na zlecenie tworzone z kolegami — nazwa mjgweb.pl od naszych imion (Mikołaj, Jakub, Gracjan)", en: "Client websites built together with friends — the name mjgweb.pl comes from our first names (Mikołaj, Jakub, Gracjan)" },
+      { pl: "Realizacja projektów równolegle z pracą w Leroy Merlin — pełny cykl: projekt, kod, wdrożenie", en: "Delivering projects in parallel with my Leroy Merlin job — full cycle: design, code, deployment" },
+      { pl: "Zrealizowane m.in. mkcycling.pl oraz portfolio zespołu mjgweb.pl", en: "Delivered e.g. mkcycling.pl and the team's portfolio mjgweb.pl" },
+    ],
+    links: [
+      { label: "mkcycling.pl", href: "https://mkcycling.pl/" },
+      { label: "mjgweb.pl", href: "https://mjgweb.pl/" },
+    ],
+    tag: "now",
+    icon: <CodeBracketSolid className="w-full h-full" />,
+  },
   {
     period: { pl: "2025 — teraz", en: "2025 — now" },
     role: { pl: "Specjalista IT", en: "IT Specialist" },
@@ -265,6 +282,22 @@ export default function TrackRecord() {
                       </li>
                     ))}
                   </ul>
+
+                  {e.links && (
+                    <div className="relative z-10 mt-3 flex flex-wrap gap-2">
+                      {e.links.map((l) => (
+                        <a
+                          key={l.href}
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-mono text-xs text-bull border border-bull/40 bg-bull/10 rounded px-2 py-1 transition-colors hover:bg-bull/20 hover:border-bull"
+                        >
+                          ↗ {l.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             );
