@@ -81,7 +81,7 @@ export default function Contact() {
                   <GithubIcon className="w-5 h-5" /> GitHub
                 </a>
                 <a
-                  href="/CV_Mikołaj_Sitek.pdf"
+                  href="/CV_Mikolaj_Sitek.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 bg-terminal-bg text-terminal-highlight border border-terminal-border rounded hover:border-bull hover:text-bull hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
