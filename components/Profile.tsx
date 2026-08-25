@@ -16,6 +16,8 @@ const TABS: { id: TabId; file: string }[] = [
 ];
 
 const hl = "text-terminal-highlight";
+const lnk =
+  "text-terminal-highlight underline decoration-dotted underline-offset-2 hover:text-bull transition-colors";
 
 // Podświetlanie składni dla „fundamentals.json" — render jak w edytorze kodu
 const jPunct = "text-terminal-text/40";
@@ -252,6 +254,19 @@ function NowContent() {
             <span className={hl}>IT Specialist</span> at Leroy Merlin
           </li>
           <li>
+            <span className="text-bull mr-2">-</span>In parallel I{" "}
+            <span className={hl}>freelance</span> — building client websites with
+            friends as{" "}
+            <a href="https://mjgweb.pl/" target="_blank" rel="noopener noreferrer" className={lnk}>
+              mjgweb.pl
+            </a>{" "}
+            (e.g.{" "}
+            <a href="https://mkcycling.pl/" target="_blank" rel="noopener noreferrer" className={lnk}>
+              mkcycling.pl
+            </a>
+            )
+          </li>
+          <li>
             <span className="text-bull mr-2">-</span>I develop my own apps —
             above all <span className={hl}>Business Scanner</span> and{" "}
             <span className={hl}>SplitDeBill</span>
@@ -283,6 +298,19 @@ function NowContent() {
           <span className="text-bull mr-2">-</span>Pracuję jako{" "}
           <span className={hl}>Specjalista IT</span> w
           Leroy Merlin
+        </li>
+        <li>
+          <span className="text-bull mr-2">-</span>Równolegle działam na{" "}
+          <span className={hl}>freelansie</span> — robię strony na zlecenie z
+          kolegami jako{" "}
+          <a href="https://mjgweb.pl/" target="_blank" rel="noopener noreferrer" className={lnk}>
+            mjgweb.pl
+          </a>{" "}
+          (np.{" "}
+          <a href="https://mkcycling.pl/" target="_blank" rel="noopener noreferrer" className={lnk}>
+            mkcycling.pl
+          </a>
+          )
         </li>
         <li>
           <span className="text-bull mr-2">-</span>Rozwijam własne aplikacje —

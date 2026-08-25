@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 
+// Generowany w buildzie jako statyczny PNG (output: export)
+export const dynamic = "force-static";
+
 // Obraz podglądu linku (LinkedIn / Twitter / Discord) generowany w buildzie
 export const alt = "Mikołaj Sitek — Fullstack Developer (Web & Mobile)";
 export const size = { width: 1200, height: 630 };
