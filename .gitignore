@@ -24,3 +24,12 @@ npm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# modele 3D — zrodla dla `npm run build:avatar`, trzymane lokalnie.
+# Do repo trafia wylacznie zmergowany wynik: public/avatar/avatar-story.glb
+*.glb
+!public/avatar/avatar-story.glb
+
+# paczka deployowa i pliki roznicowe
+/sitekmikolaj-deploy.zip
+/_robocze/

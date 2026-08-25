@@ -54,7 +54,7 @@ export default function Hero() {
               <MailIcon className="w-4 h-4" /> {tr("Kontakt", "Contact")}
             </a>
             <a
-              href="/cv.pdf"
+              href="/CV_Mikolaj_Sitek.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-transparent text-terminal-text border border-terminal-border rounded-md transition-all hover:border-bull hover:text-bull flex items-center gap-2"

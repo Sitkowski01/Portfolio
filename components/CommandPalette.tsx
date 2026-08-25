@@ -91,9 +91,9 @@ const COMMANDS: Command[] = [
   {
     keyword: "cv",
     label: { pl: "Wyświetl CV", en: "View CV" },
-    hint: "open /CV_Mikołaj_Sitek.pdf",
+    hint: "open /CV_Mikolaj_Sitek.pdf",
     action: () => {
-      window.open("/CV_Mikołaj_Sitek.pdf", "_blank");
+      window.open("/CV_Mikolaj_Sitek.pdf", "_blank");
     },
   },
 ];
