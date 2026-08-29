@@ -55,6 +55,30 @@ public/projects/      zrzuty ekranu i dokumenty koncepcyjne projektów
 scripts/merge-avatar.mjs  scalanie animacji w jeden model
 ```
 
+## Decyzje projektowe
+
+**Eksport statyczny, bo hosting jest współdzielony.** Strona stoi na zwykłym
+`public_html` bez Node'a, więc `output: "export"` nie jest tu preferencją, tylko
+warunkiem. Konsekwencje widać w konfiguracji: `images.unoptimized` (optymalizator
+Next wymaga serwera, więc zdjęcia muszą być przygotowane wcześniej) i
+`trailingSlash` (każda podstrona jako katalog z `index.html` — bezpieczniejsze
+pod Apache). Cena: nie ma tras API, odświeżania przyrostowego ani renderowania
+na żądanie. Dla portfolio, które zmienia się kilka razy w roku, to dobry układ.
+
+**Scena 3D ma trzy wyjścia awaryjne, nie jedno.** Animowana postać to
+najcięższy element strony, więc:
+
+- `prefers-reduced-motion` przełącza na wersję statyczną,
+- brak WebGL też — zamiast pustego prostokąta pojawia się obraz,
+- `dpr` jest ograniczone do `[1, 1.75]`, bo na ekranach z trzykrotną gęstością
+  pikseli renderowanie w pełnej rozdzielczości zabija płynność bez widocznej różnicy.
+
+Portfolio, które zawiesza telefon rekrutera, działa przeciwko sobie.
+
+**Nawigacja z klawiatury jako pierwszy sposób, nie dodatek.** Paleta poleceń pasuje
+do konwencji terminala, ale ma też prostszy powód: na stronie jednoekranowej
+z długim przewijaniem szukanie sekcji myszą jest wolniejsze niż wpisanie jej nazwy.
+
 ## Modele 3D
 
 Narzędzie eksportuje każdą animację jako osobny plik ważący kilkadziesiąt megabajtów,
@@ -64,3 +88,13 @@ i kompresuje tekstury. Wynik to jeden plik zamiast kilkuset megabajtów.
 
 Źródła animacji leżą lokalnie i są wyłączone z repozytorium — wersjonowany jest tylko
 scalony wynik w `public/avatar/`.
+
+## Czego tu nie ma
+
+- **Brak testów automatycznych.** Ryzyko na tej stronie to wygląd i płynność, a nie
+  logika — jednostkowe asercje nie złapałyby ani jednego, ani drugiego.
+- **Treść projektów jest w kodzie**, nie w CMS-ie. Dwanaście pozycji aktualizowanych
+  kilka razy w roku nie uzasadnia panelu ani bazy.
+- **Źródła animacji 3D są poza repozytorium** — wersjonowany jest wyłącznie scalony
+  wynik. Odtworzenie modelu od zera wymaga plików źródłowych, których tu nie ma;
+  `npm run build:avatar` działa tylko lokalnie.
