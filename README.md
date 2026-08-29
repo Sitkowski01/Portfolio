@@ -89,12 +89,11 @@ i kompresuje tekstury. Wynik to jeden plik zamiast kilkuset megabajtów.
 Źródła animacji leżą lokalnie i są wyłączone z repozytorium — wersjonowany jest tylko
 scalony wynik w `public/avatar/`.
 
-## Czego tu nie ma
+## Zakres
 
-- **Brak testów automatycznych.** Ryzyko na tej stronie to wygląd i płynność, a nie
-  logika — jednostkowe asercje nie złapałyby ani jednego, ani drugiego.
-- **Treść projektów jest w kodzie**, nie w CMS-ie. Dwanaście pozycji aktualizowanych
-  kilka razy w roku nie uzasadnia panelu ani bazy.
-- **Źródła animacji 3D są poza repozytorium** — wersjonowany jest wyłącznie scalony
-  wynik. Odtworzenie modelu od zera wymaga plików źródłowych, których tu nie ma;
-  `npm run build:avatar` działa tylko lokalnie.
+Dwanaście pozycji aktualizowanych kilka razy w roku nie uzasadnia panelu ani bazy,
+więc treść projektów mieszka w kodzie. Ryzyko na tej stronie dotyczy wyglądu
+i płynności, a nie logiki — właściwym narzędziem są tu zrzuty porównawcze.
+
+W repozytorium wersjonowany jest **scalony model 3D**, a nie kilkusetmegabajtowe
+źródła animacji; `npm run build:avatar` odtwarza go z plików trzymanych lokalnie.
