@@ -138,9 +138,9 @@ const projects: Project[] = [
       { pl: "Testy różnicowe, współbieżności, Testcontainers, mutacyjne (PIT) i e2e (Playwright)", en: "Differential, concurrency, Testcontainers, mutation (PIT) and e2e (Playwright) tests" },
     ],
     stats: [
-      { label: { pl: "Testy", en: "Tests" }, value: "238 + 9 e2e" },
+      { label: { pl: "Testy", en: "Tests" }, value: "260 + 14 e2e" },
       { label: { pl: "Silnik (JMH)", en: "Engine (JMH)" }, value: "2,5 mln zleceń/s" },
-      { label: { pl: "Odtworzenie", en: "Recovery" }, value: "~100k zdarzeń/s" },
+      { label: { pl: "Restart z migawki", en: "Restart from snapshot" }, value: "0,5 s" },
       { label: { pl: "Mutacje zabite", en: "Mutants killed" }, value: "93% (PIT)" },
     ],
     images: [
