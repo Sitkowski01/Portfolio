@@ -148,8 +148,8 @@ const projects: Project[] = [
       "/projects/parkiet/events.webp",
       "/projects/parkiet/mobile.webp",
     ],
-    demoUrl: "https://github.com/Sitkowski01/mini-exchange#readme",
-    githubUrl: "https://github.com/Sitkowski01/mini-exchange",
+    demoUrl: "https://github.com/Sitkowski01/parkiet-exchange#readme",
+    githubUrl: "https://github.com/Sitkowski01/parkiet-exchange",
     demoLabel: { pl: "README", en: "README" },
   },
   {
