@@ -116,6 +116,43 @@ const projects: Project[] = [
     demoLabel: { pl: "Praca dyplomowa (PDF)", en: "Diploma thesis (PDF)" },
   },
   {
+    ticker: "$PRKT",
+    category: { pl: "Backend / Java / Systemy rozproszone", en: "Backend / Java / Distributed systems" },
+    change: { pl: "▲ +8.0%", en: "▲ +8.0%" },
+    title: { pl: "Parkiet — silnik giełdy", en: "Parkiet — exchange engine" },
+    flagship: true,
+    tags: ["Java 21", "Spring Boot 4", "PostgreSQL", "Kafka", "WebSocket", "Prometheus", "Grafana", "JMH", "k6", "Testcontainers"],
+    shortDescription: {
+      pl: "Silnik giełdy jak na GPW: arkusz zleceń, kojarzenie cena–czas, event sourcing, Kafka i notowania na żywo w terminalu w przeglądarce.",
+      en: "A stock exchange engine like the WSE: order book, price-time matching, event sourcing, Kafka and live quotes in a browser trading terminal.",
+    },
+    description: {
+      pl: "Backend giełdy napisany od zera w Javie 21 i Spring Boot 4. Każda spółka ma własny wątek silnika i ograniczoną kolejkę — arkusz bez blokad, jak w LMAX. Zlecenia kojarzą się według ceny, potem czasu; każde zdarzenie trafia do dziennika w PostgreSQL (zapis poza wątkiem silnika, group commit, backpressure), a stamtąd przez transactional outbox do Kafki. Po restarcie arkusz odtwarza się z dziennika (event sourcing) i numeracja ciągnie się dalej. Notowania idą WebSocketem z conflation, a ruch na giełdzie generują boty zakotwiczone w prawdziwych cenach z GPW. Do tego terminal w przeglądarce (wykres świecowy na canvasie, arkusz z głębokością, formularz zleceń), metryki w Prometheus/Grafana, benchmarki JMH i testy obciążeniowe k6.",
+      en: "An exchange backend built from scratch in Java 21 and Spring Boot 4. Every instrument has its own engine thread and a bounded queue — a lock-free order book, LMAX-style. Orders match by price, then time; every event lands in a PostgreSQL journal (written off the engine thread, group commit, backpressure) and from there goes to Kafka through a transactional outbox. After a restart the book is rebuilt from the journal (event sourcing) and numbering continues. Quotes stream over WebSocket with conflation, and market activity comes from bots anchored to real WSE prices. Plus a browser trading terminal (canvas candlestick chart, depth book, order ticket), Prometheus/Grafana metrics, JMH benchmarks and k6 load tests.",
+    },
+    highlights: [
+      { pl: "Kojarzenie cena–czas, jeden wątek na spółkę, ceny w groszach (long)", en: "Price-time matching, one thread per instrument, prices in grosz (long)" },
+      { pl: "Dziennik w PostgreSQL + transactional outbox → Kafka (at-least-once)", en: "PostgreSQL journal + transactional outbox → Kafka (at-least-once)" },
+      { pl: "Restart bez utraty arkusza: odtworzenie z dziennika (event sourcing)", en: "Restart without losing the book: rebuilt from the journal (event sourcing)" },
+      { pl: "Notowania WebSocket, terminal w przeglądarce, Prometheus + Grafana", en: "WebSocket quotes, browser terminal, Prometheus + Grafana" },
+      { pl: "Testy różnicowe, współbieżności, Testcontainers i mutacyjne (PIT)", en: "Differential, concurrency, Testcontainers and mutation tests (PIT)" },
+    ],
+    stats: [
+      { label: { pl: "Testy", en: "Tests" }, value: "235" },
+      { label: { pl: "Silnik (JMH)", en: "Engine (JMH)" }, value: "2,5 mln zleceń/s" },
+      { label: { pl: "Odtworzenie", en: "Recovery" }, value: "~100k zdarzeń/s" },
+      { label: { pl: "Mutacje zabite", en: "Mutants killed" }, value: "93% (PIT)" },
+    ],
+    images: [
+      "/projects/parkiet/desktop.webp",
+      "/projects/parkiet/events.webp",
+      "/projects/parkiet/mobile.webp",
+    ],
+    demoUrl: "https://github.com/Sitkowski01/mini-exchange#readme",
+    githubUrl: "https://github.com/Sitkowski01/mini-exchange",
+    demoLabel: { pl: "README", en: "README" },
+  },
+  {
     ticker: "$SPLIT",
     category: { pl: "Mobile / Web / Backend", en: "Mobile / Web / Backend" },
     change: { pl: "▲ +18.4%", en: "▲ +18.4%" },
