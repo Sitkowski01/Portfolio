@@ -135,10 +135,10 @@ const projects: Project[] = [
       { pl: "Dziennik w PostgreSQL + transactional outbox → Kafka (at-least-once)", en: "PostgreSQL journal + transactional outbox → Kafka (at-least-once)" },
       { pl: "Restart bez utraty arkusza: odtworzenie z dziennika (event sourcing)", en: "Restart without losing the book: rebuilt from the journal (event sourcing)" },
       { pl: "Notowania WebSocket, terminal w przeglądarce, Prometheus + Grafana", en: "WebSocket quotes, browser terminal, Prometheus + Grafana" },
-      { pl: "Testy różnicowe, współbieżności, Testcontainers i mutacyjne (PIT)", en: "Differential, concurrency, Testcontainers and mutation tests (PIT)" },
+      { pl: "Testy różnicowe, współbieżności, Testcontainers, mutacyjne (PIT) i e2e (Playwright)", en: "Differential, concurrency, Testcontainers, mutation (PIT) and e2e (Playwright) tests" },
     ],
     stats: [
-      { label: { pl: "Testy", en: "Tests" }, value: "235" },
+      { label: { pl: "Testy", en: "Tests" }, value: "238 + 9 e2e" },
       { label: { pl: "Silnik (JMH)", en: "Engine (JMH)" }, value: "2,5 mln zleceń/s" },
       { label: { pl: "Odtworzenie", en: "Recovery" }, value: "~100k zdarzeń/s" },
       { label: { pl: "Mutacje zabite", en: "Mutants killed" }, value: "93% (PIT)" },
