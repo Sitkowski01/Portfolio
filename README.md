@@ -9,7 +9,7 @@ serwerze współdzielonym.
 
 ## Co jest w środku
 
-**Dwanaście projektów** — każdy z opisem, stackiem, zrzutami ekranu i odnośnikiem
+**Trzynaście projektów** — każdy z opisem, stackiem, zrzutami ekranu i odnośnikiem
 do wersji na żywo albo do dokumentu koncepcyjnego opisującego produkt.
 
 **Scrollytelling 3D** — animowana postać prowadzona przez kolejne sceny w miarę
