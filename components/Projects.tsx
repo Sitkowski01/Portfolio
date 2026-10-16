@@ -175,9 +175,9 @@ const projects: Project[] = [
       { pl: "Ewaluacje promptów, testy property-based, mutacyjne (Stryker), e2e (Playwright)", en: "Prompt evaluations, property-based, mutation (Stryker) and e2e (Playwright) tests" },
     ],
     stats: [
-      { label: { pl: "Testy", en: "Tests" }, value: "930 + 12 e2e" },
-      { label: { pl: "Koszt rozprawy", en: "Cost per trial" }, value: "$0,26" },
-      { label: { pl: "Wywołania modelu", en: "Model calls" }, value: "13" },
+      { label: { pl: "Testy", en: "Tests" }, value: "950 + 12 e2e" },
+      { label: { pl: "Koszt rozprawy", en: "Cost per trial" }, value: "$0,32" },
+      { label: { pl: "Wywołania modelu", en: "Model calls" }, value: "20" },
       { label: { pl: "Mutacje zabite", en: "Mutants killed" }, value: "≥ 97% (Stryker)" },
     ],
     images: [
