@@ -175,8 +175,8 @@ const projects: Project[] = [
       { pl: "Testy FsCheck, Testcontainers, e2e (Playwright na całym systemie w Dockerze), mutacyjne (Stryker)", en: "FsCheck, Testcontainers, e2e (Playwright on the whole system in Docker), mutation (Stryker) tests" },
     ],
     stats: [
-      { label: { pl: "Testy", en: "Tests" }, value: "838 + 7 e2e" },
-      { label: { pl: "Mutacje zabite (domena)", en: "Mutants killed (domain)" }, value: "98,9%" },
+      { label: { pl: "Testy", en: "Tests" }, value: "856 + 7 e2e" },
+      { label: { pl: "Mutacje zabite (domena)", en: "Mutants killed (domain)" }, value: "100%" },
       { label: { pl: "Równoległe wypłaty", en: "Concurrent withdrawals" }, value: "20 → 10 OK" },
       { label: { pl: "Język", en: "Language" }, value: "C# + TS" },
     ],
