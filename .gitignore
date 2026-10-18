@@ -29,6 +29,8 @@ next-env.d.ts
 # Do repo trafia wylacznie zmergowany wynik: public/avatar/avatar-story.glb
 *.glb
 !public/avatar/avatar-story.glb
+# oraz modele sali i postaci demo Trybunalu CV (build:demo w trybunal-cv)
+!public/trybunal/models/*.glb
 
 # paczka deployowa i pliki roznicowe
 /sitekmikolaj-deploy.zip
