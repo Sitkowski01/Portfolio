@@ -224,7 +224,7 @@ const projects: Project[] = [
       "/projects/trybunal/mobile.webp",
     ],
     demoUrl: "/trybunal/",
-    githubUrl: "https://github.com/Sitkowski01/trybunal-cv",
+    githubUrl: "https://github.com/Sitkowski01/trybunal-cv-ai",
     demoLabel: { pl: "Demo rozprawy", en: "Trial demo" },
   },
   {
@@ -388,7 +388,7 @@ const projects: Project[] = [
       "/projects/reservation/shot-6.webp",
     ],
     demoUrl: "https://restaurant-design-ten.vercel.app/",
-    githubUrl: "https://github.com/Sitkowski01/restaurantDesign",
+    githubUrl: "https://github.com/Sitkowski01/restaurant-booking-panels",
     demoLabel: { pl: "Strona", en: "Website" },
   },
   {
